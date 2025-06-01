@@ -11,18 +11,18 @@ export const componentVars: {
 }
 
 export interface CreateComponentOptions {
-    selector: string;
+    selector: string | HTMLDivElement;
     mount?(component: UiComponent, element: HTMLDivElement): void;
     loadOptions?: AutoLoadOptions;
     render?: TemplateFn;
-    auto?: [TemplateFn, AutoLoadOptions]
+    auto?: [TemplateFn, AutoLoadOptions];
 }
 
 export function createComponent(opts: CreateComponentOptions): UiComponentBase {
     const component = new UiComponentBase();
 
     component.mount = () => {
-        component.element = document.querySelector(opts.selector);
+        component.element = typeof opts.selector === "string" ? document.querySelector(opts.selector) : opts.selector;
         opts.mount?.(component, component.element);
     }
 
