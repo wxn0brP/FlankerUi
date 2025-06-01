@@ -3,6 +3,7 @@ import { autoTemplateComponent } from "./auto";
 import { autoLoad, AutoLoadOptions } from "./autoLoad";
 import { UiComponentBase } from "./base";
 import { autoRender, TemplateFn } from "./autoRender";
+import { EventEngineBinder } from "./event";
 
 export const componentVars: {
     fetchVQL<T>(query: string, vars?: object): Promise<T | T[]>
@@ -15,7 +16,8 @@ export interface CreateComponentOptions {
     mount?(component: UiComponent, element: HTMLDivElement): void;
     loadOptions?: AutoLoadOptions;
     render?: TemplateFn;
-    auto?: [TemplateFn, AutoLoadOptions];
+    autoLoad?: [TemplateFn, AutoLoadOptions];
+    data?: any
 }
 
 export function createComponent(opts: CreateComponentOptions): UiComponentBase {
@@ -23,14 +25,17 @@ export function createComponent(opts: CreateComponentOptions): UiComponentBase {
 
     component.mount = () => {
         component.element = typeof opts.selector === "string" ? document.querySelector(opts.selector) : opts.selector;
+        new EventEngineBinder(component.element, component.eventEngine);
         opts.mount?.(component, component.element);
     }
 
+    if (opts.data) component.data = opts.data;
     if (opts.loadOptions) autoLoad(component, opts.loadOptions);
     if (opts.render) autoRender(component, opts.render);
-    if (opts.auto) autoTemplateComponent(component, opts.auto[0], opts.auto[1]);
+    if (opts.autoLoad) autoTemplateComponent(component, opts.autoLoad[0], opts.autoLoad[1]);
 
     return component;
 }
 
 export * as uiHelpers from "./helpers";
+export * as UIEvents from "./event";

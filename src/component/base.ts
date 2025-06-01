@@ -1,7 +1,10 @@
 import { UiComponent } from "../types";
+import { EventEngine } from "./event";
 
 export class UiComponentBase implements UiComponent {
     element: HTMLDivElement;
+    data: any;
+    eventEngine: EventEngine = new EventEngine();
 
     q<T=HTMLInputElement>(selector: string): T {
         return this.element.querySelector(selector) as T;
@@ -15,7 +18,7 @@ export class UiComponentBase implements UiComponent {
         throw new Error("Method not implemented.");
     }
 
-    load(...args: any): void {
+    async load(...args: any) {
         throw new Error("Method not implemented.");
     }
 }
