@@ -2,7 +2,7 @@ import { UiComponent } from "../types";
 import { autoTemplateComponent } from "./auto";
 import { autoLoad, AutoLoadOptions } from "./autoLoad";
 import { UiComponentBase } from "./base";
-import { autoRender, TemplateFn } from "./autoRender";
+import { autoRender, compileTemplateAdvanced, TemplateFn } from "./autoRender";
 import { EventEngineBinder } from "./event";
 
 export const componentVars: {
@@ -48,3 +48,6 @@ export function createComponent(opts: CreateComponentOptions): UiComponentBase {
 
 export * as uiHelpers from "./helpers";
 export * as UIEvents from "./event";
+
+export const fl = (strings: TemplateStringsArray, ...values: any[]) =>
+  compileTemplateAdvanced(strings.reduce((acc, s, i) => acc + s + (values[i] ?? ""), ""));
