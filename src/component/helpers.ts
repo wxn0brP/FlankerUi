@@ -1,6 +1,6 @@
-export function storeHide(component: HTMLElement, storeValue: { subscribe: (fn: (data: any) => void) => void }) {
+export function storeHide(element: HTMLElement, storeValue: { subscribe: (fn: (data: any) => void) => void }) {
     storeValue.subscribe((data) => {
-        component.style.display = data ? "" : "none";
+        element.style.display = data ? "" : "none";
     });
 }
 
