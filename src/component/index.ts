@@ -17,7 +17,10 @@ export interface CreateComponentOptions {
     loadOptions?: AutoLoadOptions;
     render?: TemplateFn;
     autoLoad?: [TemplateFn, AutoLoadOptions];
-    data?: any
+    data?: any;
+    events?: {
+        [key: string]: (data: any, e: Event) => void
+    }
 }
 
 export function createComponent(opts: CreateComponentOptions): UiComponentBase {
@@ -33,6 +36,12 @@ export function createComponent(opts: CreateComponentOptions): UiComponentBase {
     if (opts.loadOptions) autoLoad(component, opts.loadOptions);
     if (opts.render) autoRender(component, opts.render);
     if (opts.autoLoad) autoTemplateComponent(component, opts.autoLoad[0], opts.autoLoad[1]);
+
+    if (opts.events) {
+        for (const [event, handler] of Object.entries(opts.events)) {
+            component.eventEngine.register(event, handler);
+        }
+    }
 
     return component;
 }
