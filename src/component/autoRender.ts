@@ -29,8 +29,16 @@ export function compileTemplateAdvanced(template: string) {
         // each block
         output = output.replace(/\{\{#each (\w+)\}\}([\s\S]+?)\{\{\/each\}\}/g, (_, key, block) => {
             const list = getValue(data, key);
-            if (!Array.isArray(list)) return "";
-            return list.map(item => renderMini(block, item, self)).join("");
+            if (Array.isArray(list)) {
+                return list.map(item => renderMini(block, item, self)).join("");
+            }
+            if (typeof list === "object" && list != null) {
+                return Object.entries(list).map(([itemKey, itemVal]) => {
+                    // @ts-ignore
+                    return renderMini(block, { key: itemKey, ...itemVal }, self);
+                }).join("");
+            }
+            return "";
         });
 
         // if block
