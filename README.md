@@ -13,7 +13,7 @@ A lightweight, reactive UI framework for building dynamic web applications with 
 
 ## Installation
 ```bash
-yarn add github:wxn0brP/FlankerUi
+yarn add github:wxn0brP/FlankerUi#dist
 ```
 
 ## Basic Usage
