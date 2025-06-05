@@ -30,6 +30,10 @@ function parseValue(val: string): any {
 
 export class EventEngineBinder {
     constructor(private root: HTMLElement, private eventEngine: EventEngine) {
+        if (!this.root) {
+            console.warn("No root element provided for EventEngineBinder");
+            return;
+        }
         this.root.addEventListener("click", (e) => {
             const target = (e.target as HTMLElement).closest<HTMLElement>("[data-click]");
             if (!target || !this.root.contains(target)) return;
