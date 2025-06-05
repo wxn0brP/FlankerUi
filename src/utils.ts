@@ -30,7 +30,7 @@ export function getJSON<T=any>(url: string): T {
     return JSON.parse(get(url));
 }
 
-export function debounce<T=Function>(func: Function, wait: number): T {
+export function debounce<T=Function>(func: Function, wait: number = 100): T {
     let timeout: any;
     return function executedFunction(...args: any[]) {
         const later = () => {
@@ -42,7 +42,7 @@ export function debounce<T=Function>(func: Function, wait: number): T {
     } as T;
 }
 
-export function throttle<T=Function>(func: Function, wait: number): T {
+export function throttle<T=Function>(func: Function, wait: number = 100): T {
     let inThrottle: boolean;
     return function executedFunction(...args: any[]) {
         if (!inThrottle) {
