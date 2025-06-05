@@ -30,7 +30,7 @@ export function getJSON<T=any>(url: string): T {
     return JSON.parse(get(url));
 }
 
-export function debounce(func: Function, wait: number): Function {
+export function debounce<T=Function>(func: Function, wait: number): T {
     let timeout: any;
     return function executedFunction(...args: any[]) {
         const later = () => {
@@ -39,10 +39,10 @@ export function debounce(func: Function, wait: number): Function {
         };
         clearTimeout(timeout);
         timeout = setTimeout(later, wait);
-    };
+    } as T;
 }
 
-export function throttle(func: Function, wait: number): Function {
+export function throttle<T=Function>(func: Function, wait: number): T {
     let inThrottle: boolean;
     return function executedFunction(...args: any[]) {
         if (!inThrottle) {
@@ -50,7 +50,7 @@ export function throttle(func: Function, wait: number): Function {
             inThrottle = true;
             setTimeout(() => (inThrottle = false), wait);
         }
-    };
+    } as T;
 }
 
 export function delay(ms: number): Promise<void> {
