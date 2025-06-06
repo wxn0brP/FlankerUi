@@ -18,45 +18,6 @@ yarn add github:wxn0brP/FlankerUi#dist
 
 ## Basic Usage
 
-### Creating a Component
-```ts
-import { createComponent } from '@wxn0brp/flanker-ui';
-
-const myComponent = createComponent({
-  selector: '#my-component',
-  render: `
-    <div class="content">
-      <h1>{{title}}</h1>
-      <p>{{description}}</p>
-    </div>
-  `,
-  data: {
-    title: 'Welcome to Flanker UI',
-    description: 'A reactive UI framework for modern web apps'
-  }
-});
-
-myComponent.mount();
-```
-
-### Template Syntax
-```html
-<!-- Basic interpolation -->
-<p>Hello, {{name}}!</p>
-
-<!-- Conditional rendering -->
-{{#if isAdmin}}
-  <p>Welcome, Admin!</p>
-{{/if}}
-
-<!-- List rendering -->
-<ul>
-  {{#each items}}
-    <li>{{name}} - ${{price}}</li>
-  {{/each}}
-</ul>
-```
-
 ### State Management
 ```ts
 import { createStore } from '@wxn0brp/flanker-ui';
@@ -80,16 +41,6 @@ appStore.counter.set(1);
 
 ### DOM Manipulation
 ```ts
-import { fl } from '@wxn0brp/flanker-ui';
-
-const template = fl`
-  <div class="container">
-    <h1>{{title}}</h1>
-    <p>{{description}}</p>
-  </div>
-`;
-const html = template({ title: 'Flanker UI', description: 'A reactive UI framework for modern web apps' });
-
 // Create and manipulate elements
 const element = document.createElement('div');
 element
@@ -110,14 +61,6 @@ componentVars.fetchVQL = fetchVQL; // or other vql client implementation
 ```
 
 ## API Reference
-### Component System
-- `createComponent()`: Factory function for creating UI components
-- `autoTemplateComponent()`: Combines template rendering and data loading
-- `UiComponentBase`: Base class for custom components
-
-### Template Engine
-- `compileTemplateAdvanced()`: Compiles templates with logic blocks
-- `renderComponent()`: Renders data into DOM elements
 
 ### DOM Extensions
 All HTMLElements have these additional methods:

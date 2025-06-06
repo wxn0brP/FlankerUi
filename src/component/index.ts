@@ -1,53 +1,79 @@
-import { UiComponent } from "../types";
-import { autoTemplateComponent } from "./auto";
-import { autoLoad, AutoLoadOptions } from "./autoLoad";
-import { UiComponentBase } from "./base";
-import { autoRender, compileTemplateAdvanced, TemplateFn } from "./autoRender";
-import { EventEngineBinder } from "./event";
-
 export const componentVars: {
     fetchVQL<T>(query: string, vars?: object): Promise<T | T[]>
 } = {
     fetchVQL: async () => ({} as any)
 }
 
-export interface CreateComponentOptions {
-    selector: string | HTMLDivElement;
-    mount?(component: UiComponent, element: HTMLDivElement): void;
-    loadOptions?: AutoLoadOptions;
-    render?: TemplateFn;
-    autoLoad?: [TemplateFn, AutoLoadOptions];
-    data?: any;
+type ViewOptions<T = any> = {
+    selector: string;
+    query: string | ((...args: any[]) => Promise<T>);
+    queryArgs?: any[];
+    transform?: (data: T) => any;
+    sort?: string | ((a: any, b: any) => number);
+    template: (item: any) => string;
     events?: {
-        [key: string]: (data: any, e: Event) => void
+        [eventType: string]: {
+            [selector: string]: (el: HTMLElement, e: Event) => void;
+        };
+    };
+};
+
+export function mountView(opts: ViewOptions) {
+    const el = document.querySelector(opts.selector) as HTMLElement;
+    if (!el) throw new Error(`mountView: selector '${opts.selector}' not found`);
+
+    async function load(...args: any[]) {
+        let data: any;
+        if (typeof opts.query === "string") {
+            data = await componentVars.fetchVQL(opts.query, { ...args });
+        } else if (typeof opts.query === "function") {
+            data = await opts.query(...(opts.queryArgs ?? []), ...args);
+        } else {
+            throw new Error("Invalid query type");
+        }
+
+        if (opts.transform) data = opts.transform(data);
+
+        if (opts.sort) {
+            if (typeof opts.sort === "function") {
+                data = data.sort(opts.sort);
+            } else if (typeof opts.sort === "string") {
+                const key = opts.sort;
+                data = data.sort((a, b) => {
+                    const av = a?.[key], bv = b?.[key];
+                    return (typeof av === "string" || typeof bv === "string")
+                        ? String(av).localeCompare(String(bv))
+                        : (av ?? 0) - (bv ?? 0);
+                });
+            }
+        }
+
+        el.innerHTML = Array.isArray(data)
+            ? data.map(opts.template).join("")
+            : opts.template(data);
     }
-}
 
-export function createComponent(opts: CreateComponentOptions): UiComponentBase {
-    const component = new UiComponentBase();
-
-    component.mount = () => {
-        component.element = typeof opts.selector === "string" ? document.querySelector(opts.selector) : opts.selector;
-        new EventEngineBinder(component.element, component.eventEngine);
-        opts.mount?.(component, component.element);
-    }
-
-    if (opts.data) component.data = opts.data;
-    if (opts.loadOptions) autoLoad(component, opts.loadOptions);
-    if (opts.render) autoRender(component, opts.render);
-    if (opts.autoLoad) autoTemplateComponent(component, opts.autoLoad[0], opts.autoLoad[1]);
-
+    // Events (delegated, attached once)
     if (opts.events) {
-        for (const [event, handler] of Object.entries(opts.events)) {
-            component.eventEngine.register(event, handler);
+        for (const [type, targets] of Object.entries(opts.events)) {
+            el.addEventListener(type, (e) => {
+                const target = e.target as HTMLElement;
+                for (const [selector, handler] of Object.entries(targets)) {
+                    const match = target.closest(selector) as HTMLElement;
+                    if (match && el.contains(match)) {
+                        handler(match, e);
+                        break;
+                    }
+                }
+            });
         }
     }
 
-    return component;
+    return {
+        load,
+        element: el
+    };
 }
 
-export * as uiHelpers from "./helpers";
-export * as UIEvents from "./event";
 
-export const fl = (strings: TemplateStringsArray, ...values: any[]) =>
-  compileTemplateAdvanced(strings.reduce((acc, s, i) => acc + s + (values[i] ?? ""), ""));
+export * as uiHelpers from "./helpers";

@@ -2,7 +2,7 @@ type Schema = {
     [key: string]: any;
 };
 
-type StoreType<T> = {
+export type StoreType<T> = {
     [K in keyof T]: T[K] extends object
     ? T[K] extends Array<any>
     ? ReactiveCell<T[K]>
@@ -10,7 +10,7 @@ type StoreType<T> = {
     : ReactiveCell<T[K]>;
 };
 
-interface ReactiveCell<T> {
+export interface ReactiveCell<T> {
     get(): T;
     set(val: T, propagate?: number): void;
     subscribe(listener: (value: T) => void): void;
