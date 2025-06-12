@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../src/me.ts"],
+  "sourcesContent": ["function me<T = HTMLElement>(selector: string = null): T {\n    function getParent(selector: string, element: HTMLElement) {\n        if (selector.startsWith(\"-\")) {\n            return getParent(selector.slice(1), element.parentElement);\n        }\n        return element.parentElement;\n    }\n\n    let element = document.currentScript.parentElement;\n    if (selector === null) return element as T;\n    return getParent(selector, element) as T;\n}\n\nwindow.me = me;"],
+  "mappings": "+EAAA,SAASA,EAAoBC,EAAmB,KAAS,CACrD,SAASC,EAAUD,EAAkBE,EAAsB,CACvD,OAAIF,EAAS,WAAW,GAAG,EAChBC,EAAUD,EAAS,MAAM,CAAC,EAAGE,EAAQ,aAAa,EAEtDA,EAAQ,aACnB,CALSC,EAAAF,EAAA,aAOT,IAAIC,EAAU,SAAS,cAAc,cACrC,OAAIF,IAAa,KAAaE,EACvBD,EAAUD,EAAUE,CAAO,CACtC,CAXSC,EAAAJ,EAAA,MAaT,OAAO,GAAKA",
+  "names": ["me", "selector", "getParent", "element", "__name"]
+}
