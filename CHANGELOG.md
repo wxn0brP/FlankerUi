@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.1](https://github.com/wxn0brp/FlankerUi/compare/v0.1.0...v0.1.1) (2025-06-12)
+
+
+### Features
+
+* mountView selector, query ([d4efeae](https://github.com/wxn0brp/FlankerUi/commit/d4efeaef4ce980214fa950dfc684269349c72b21))
+
 ## 0.1.0 (2025-06-06)
 
 
