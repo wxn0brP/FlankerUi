@@ -1,0 +1,40 @@
+{
+  "name": "@wxn0brp/flanker-ui",
+  "version": "0.2.0",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "description": "Flanker UI library",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wxn0brp/FlankerUi"
+  },
+  "author": "wxn0brP",
+  "license": "MIT",
+  "private": true,
+  "type": "module",
+  "devDependencies": {
+    "@types/node": "^22.12.0",
+    "@wxn0brp/vql-client": ">=0.0.6",
+    "esbuild": "^0.25.5",
+    "tsc-alias": "^1.8.10",
+    "typescript": "^5.7.3"
+  },
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    },
+    "./*": {
+      "types": "./dist/*.d.ts",
+      "import": "./dist/*.js",
+      "default": "./dist/*.js"
+    }
+  },
+  "peerDependencies": {
+    "@wxn0brp/vql-client": ">=0.0.6"
+  }
+}
