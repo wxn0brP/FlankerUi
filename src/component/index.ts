@@ -1,17 +1,12 @@
-export const componentVars: {
-    fetchVQL<T>(query: string, vars?: object): Promise<T | T[]>
-} = {
-    fetchVQL: async () => ({} as any)
-}
+import { fetchVQL, VQLQuery } from "@wxn0brp/vql-client";
 
-export type QueryStringFunction = (...any: any[]) => Promise<string>;
-export type QueryFunction = <T=any>(...any: any[]) => Promise<T>;
+export type QueryFunction<T=any> = (...any: any[]) => Promise<T>;
 
 export interface ViewOptions<T = any> {
     selector: string | HTMLElement;
-    query?: string | QueryStringFunction;
+    query?: VQLQuery | QueryFunction<VQLQuery>;
     queryFunction?: QueryFunction;
-    queryArgs?: any[];
+    queryArgs?: { [key: string]: any };
     transform?: (data: T) => any;
     sort?: string | ((a: any, b: any) => number);
     template: (item: any) => string;
@@ -26,15 +21,21 @@ export function mountView(opts: ViewOptions) {
     const el = typeof opts.selector === "string" ? document.querySelector(opts.selector) as HTMLElement : opts.selector;
     if (!el) throw new Error(`mountView: selector '${opts.selector}' not found`);
 
-    async function load(...args: any[]) {
+    async function load(args: { [key: string]: any } = {}) {
         let data: any;
-        if (typeof opts.query === "string") {
-            data = await componentVars.fetchVQL(opts.query, { ...args });
+        if (opts.queryFunction) {
+            data = await opts.queryFunction(Object.assign({}, opts.queryArgs, args));
+
+        } else if (typeof opts.query === "string") {
+            data = await fetchVQL({ query: opts.query, var: args });
+
         } else if (typeof opts.query === "function") {
-            const query = await opts.query(...(opts.queryArgs ?? []), ...args);
-            data = await componentVars.fetchVQL(query, { ...args });
-        } else if (opts.queryFunction) {
-            data = await opts.queryFunction(...(opts.queryArgs ?? []), ...args);
+            const query = await opts.query(Object.assign({}, opts.queryArgs, args));
+            data = await fetchVQL(query);
+
+        } else if (typeof opts.query === "object" && !Array.isArray(opts.query)) {
+            data = await fetchVQL(opts.query);
+
         } else {
             throw new Error("Invalid query type");
         }
