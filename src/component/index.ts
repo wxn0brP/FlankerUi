@@ -12,9 +12,12 @@ export interface ViewOptions<T = any> {
     template: (item: any) => string;
     events?: {
         [eventType: string]: {
-            [selector: string]: (el: HTMLElement, e: Event) => void;
+            [selector: string]: <EL=HTMLElement, E=Event>(el: EL, e: E) => void;
         };
     };
+    onData?: (data: any) => void;
+    onDataTransform?: (data: any) => any;
+    onDataSort?: (data: any) => number;
 };
 
 export function mountView(opts: ViewOptions) {
@@ -40,14 +43,16 @@ export function mountView(opts: ViewOptions) {
             throw new Error("Invalid query type");
         }
 
+        if (opts.onData) opts.onData(data);
         if (opts.transform) data = opts.transform(data);
+        if (opts.onDataTransform) opts.onDataTransform(data);
 
         if (opts.sort) {
             if (typeof opts.sort === "function") {
                 data = data.sort(opts.sort);
             } else if (typeof opts.sort === "string") {
                 const key = opts.sort;
-                data = data.sort((a, b) => {
+                data = data.sort((a: any, b: any) => {
                     const av = a?.[key], bv = b?.[key];
                     return (typeof av === "string" || typeof bv === "string")
                         ? String(av).localeCompare(String(bv))
@@ -55,6 +60,8 @@ export function mountView(opts: ViewOptions) {
                 });
             }
         }
+
+        if (opts.onDataSort) opts.onDataSort(data);
 
         el.innerHTML = Array.isArray(data)
             ? data.map(opts.template).join("")

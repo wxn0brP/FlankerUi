@@ -24,9 +24,9 @@ const proto = {
     css(this: HTMLElement, style: string | Record<string, string>, val: string | null = null): void {
         if (typeof style === "string") {
             if (val !== null) {
-                this.style[style as any] = val;
+                this.style[style] = val;
             } else {
-                (this.style as any).cssText = style;
+                this.style.cssText = style;
             }
         } else {
             Object.assign(this.style, style);
@@ -52,8 +52,8 @@ const proto = {
         return this;
     },
 
-    clT(this: HTMLElement, className: string): HTMLElement {
-        this.classList.toggle(className);
+    clT(this: HTMLElement, className: string, force?: boolean): HTMLElement {
+        this.classList.toggle(className, force);
         return this;
     },
 
@@ -86,23 +86,20 @@ const proto = {
 
         this.css("display", display);
         this.animateFade(0, { cb });
-        (this as any).fade = true;
+        this.fade = true;
         return this;
     },
 
     fadeOut(this: HTMLElement, cb?: () => void): HTMLElement {
         this.animateFade(1, { time: 300, cb });
         setTimeout(() => this.css("display", "none"), 300);
-        (this as any).fade = false;
+        this.fade = false;
         return this;
     },
 
+    fade: true,
     fadeToggle(this: HTMLElement): HTMLElement {
-        if ((this as any).fade) {
-            this.fadeOut();
-        } else {
-            this.fadeIn();
-        }
+        this.fade ? this.fadeOut() : this.fadeIn();
         return this;
     },
 
@@ -116,7 +113,21 @@ const proto = {
         return this;
     },
 
-    fade: true,
+    qs<T=HTMLDivElement>(this: HTMLElement, selector: string): T {
+        return this.querySelector(selector) as T;
+    },
+
+    qsi<T=HTMLInputElement>(this: HTMLElement, selector: string): T {
+        return this.querySelector(selector) as T;
+    },
+
+    qi<T=HTMLDivElement>(this: HTMLElement, id: string): T {
+        return this.querySelector(`[data-id="${id}"]`) as T;
+    },
+
+    qii<T=HTMLInputElement>(this: HTMLElement, id: string): T {
+        return this.querySelector(`[data-id="${id}"]`) as T;
+    },
 };
 
 Object.assign(HTMLElement.prototype, proto);
