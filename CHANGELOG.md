@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.1](https://github.com/wxn0brp/FlankerUi/compare/v0.2.0...v0.2.1) (2025-06-21)
+
+
+### Features
+
+* update workflow & npm publish ([8e24d79](https://github.com/wxn0brp/FlankerUi/commit/8e24d792c80517f3508e3fcecd2c051dca87a2b7))
+* UX ([77d1586](https://github.com/wxn0brp/FlankerUi/commit/77d1586cb3bb5cb5481ed525f22f52cb28c90b26))
+
 ## [0.2.0](https://github.com/wxn0brp/FlankerUi/compare/v0.1.1...v0.2.0) (2025-06-13)
 
 
