@@ -1,10 +1,11 @@
-import { fetchVQL, VQLQuery } from "@wxn0brp/vql-client";
+import { fetchVQL } from "@wxn0brp/vql-client";
+import { VqlQueryRaw } from "@wxn0brp/vql-client/dist/vql";
 
 export type QueryFunction<T=any> = (...any: any[]) => Promise<T>;
 
 export interface ViewOptions<T = any> {
     selector: string | HTMLElement;
-    query?: VQLQuery | QueryFunction<VQLQuery>;
+    query?: VqlQueryRaw | QueryFunction<VqlQueryRaw>;
     queryFunction?: QueryFunction;
     queryArgs?: { [key: string]: any };
     transform?: (data: T) => any;
