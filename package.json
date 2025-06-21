@@ -6,11 +6,11 @@
     "description": "Flanker UI library",
     "repository": {
         "type": "git",
-        "url": "https://github.com/wxn0brp/FlankerUi"
+        "url": "https://github.com/wxn0brp/FlankerUi.git"
     },
+    "homepage": "https://github.com/wxn0brp/FlankerUi",
     "author": "wxn0brP",
     "license": "MIT",
-    "private": true,
     "type": "module",
     "scripts": {
         "build": "tsc && tsc-alias && node build.js"
