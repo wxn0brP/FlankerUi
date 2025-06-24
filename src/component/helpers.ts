@@ -60,6 +60,15 @@ export function watchSelect(el: HTMLSelectElement, store: ReactiveCell<string>) 
     });
 }
 
+export function watchCheckbox(el: HTMLInputElement, store: ReactiveCell<boolean>) {
+    el.addEventListener("change", () => {
+        store.set(el.checked);
+    });
+    store.subscribe(value => {
+        if (el.checked !== value) el.checked = value;
+    });
+}
+
 export function htmlToElement<T=HTMLElement>(html: string): T {
     const template = document.createElement("template");
     template.innerHTML = html.trim();
