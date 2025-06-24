@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.2](https://github.com/wxn0brp/FlankerUi/compare/v0.2.1...v0.2.2) (2025-06-24)
+
+
+### Features
+
+* watchCheckbox ([681a343](https://github.com/wxn0brp/FlankerUi/commit/681a3438898ea844979bd0d9c57b3b516cfeef93))
+
 ### [0.2.1](https://github.com/wxn0brp/FlankerUi/compare/v0.2.0...v0.2.1) (2025-06-21)
 
 
