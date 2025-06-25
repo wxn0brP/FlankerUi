@@ -6,8 +6,8 @@ declare global {
         css(style: string | Record<string, string>, val?: string | null): void;
         attrib(att: string): string;
         attrib(att: string, arg: string): HTMLElement;
-        clA(arg: string): HTMLElement;
-        clR(arg: string): HTMLElement;
+        clA(...arg: string[]): HTMLElement;
+        clR(...arg: string[]): HTMLElement;
         clT(className: string, force?: boolean): HTMLElement;
         animateFade(from: number, options?: { time?: number; cb?: () => void }): HTMLElement;
         fadeIn(display?: string | (() => void), cb?: () => void): HTMLElement;

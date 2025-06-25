@@ -42,13 +42,13 @@ const proto = {
         }
     },
 
-    clA(this: HTMLElement, arg: string): HTMLElement {
-        this.classList.add(arg);
+    clA(this: HTMLElement, ...arg: string[]): HTMLElement {
+        this.classList.add(...arg);
         return this;
     },
 
-    clR(this: HTMLElement, arg: string): HTMLElement {
-        this.classList.remove(arg);
+    clR(this: HTMLElement, ...arg: string[]): HTMLElement {
+        this.classList.remove(...arg);
         return this;
     },
 
