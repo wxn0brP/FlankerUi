@@ -3,6 +3,7 @@ import { VqlQueryRaw } from "@wxn0brp/vql-client/dist/vql";
 import { UiComponent } from "../types";
 
 export type QueryFunction<T=any> = (...any: any[]) => Promise<T>;
+export type emptyDataMode = "append" | "prepend" | "replace";
 
 export interface ViewOptions {
     selector: string | HTMLElement;
@@ -12,6 +13,8 @@ export interface ViewOptions {
     transform?: (data: any) => any;
     sort?: string | ((a: any, b: any) => number);
     template: (item: any) => string;
+    emptyData?: string;
+    emptyDataMode?: emptyDataMode;
     events?: {
         [eventType: string]: {
             [selector: string]: (el: HTMLElement, e: Event) => void;
@@ -70,7 +73,7 @@ export function mountView<Extra extends Record<string, any> = {}>(
         }
 
         if (opts.onDataSort) opts.onDataSort(data);
-        render(data);
+        render(data, opts.emptyDataMode ?? "replace");
     }
 
     // Events (delegated, attached once)
@@ -89,10 +92,31 @@ export function mountView<Extra extends Record<string, any> = {}>(
         }
     }
 
-    function render(data: any) {
-        el.innerHTML = Array.isArray(data)
-            ? data.map(opts.template).join("")
-            : opts.template(data);
+    function render(data: any, mode: emptyDataMode = "replace") {
+        let res: string = "";
+        let empty = false;
+        if (
+            (Array.isArray(data) && data.length === 0) ||
+            (typeof data === "object" && Object.keys(data).length === 0) || 
+            (data === null || data === undefined)
+        ) {
+            res = opts.emptyData ?? "";
+            empty = true;
+        } else {
+           res = Array.isArray(data) ? data.map(opts.template).join(""): opts.template(data)
+        }
+
+        if (mode === "append") {
+            // if empty data and el already has content, do nothing
+            if (empty && el.innerHTML) return;
+            // else render or see opts.emptyData
+            el.innerHTML += res;
+        } else if (mode === "prepend") {
+            if (empty && el.innerHTML) return;
+            el.innerHTML = res + el.innerHTML;
+        } else {
+            el.innerHTML = res;
+        }
     }
 
     const base: UiComponent & {
