@@ -1,19 +1,20 @@
 import { fetchVQL } from "@wxn0brp/vql-client";
 import { VqlQueryRaw } from "@wxn0brp/vql-client/dist/vql";
+import { UiComponent } from "../types";
 
 export type QueryFunction<T=any> = (...any: any[]) => Promise<T>;
 
-export interface ViewOptions<T = any> {
+export interface ViewOptions {
     selector: string | HTMLElement;
     query?: VqlQueryRaw | QueryFunction<VqlQueryRaw>;
     queryFunction?: QueryFunction;
     queryArgs?: { [key: string]: any };
-    transform?: (data: T) => any;
+    transform?: (data: any) => any;
     sort?: string | ((a: any, b: any) => number);
     template: (item: any) => string;
     events?: {
         [eventType: string]: {
-            [selector: string]: <EL=HTMLElement, E=Event>(el: EL, e: E) => void;
+            [selector: string]: (el: HTMLElement, e: Event) => void;
         };
     };
     onData?: (data: any) => void;
@@ -21,7 +22,13 @@ export interface ViewOptions<T = any> {
     onDataSort?: (data: any) => number;
 };
 
-export function mountView(opts: ViewOptions) {
+export function mountView<Extra extends Record<string, any> = {}>(
+    opts: ViewOptions,
+    extra?: Extra
+): UiComponent & {
+    load(args?: { [key: string]: any }): Promise<void>;
+    render(data: any): void;
+} & Extra {
     const el = typeof opts.selector === "string" ? document.querySelector(opts.selector) as HTMLElement : opts.selector;
     if (!el) throw new Error(`mountView: selector '${opts.selector}' not found`);
 
@@ -63,10 +70,7 @@ export function mountView(opts: ViewOptions) {
         }
 
         if (opts.onDataSort) opts.onDataSort(data);
-
-        el.innerHTML = Array.isArray(data)
-            ? data.map(opts.template).join("")
-            : opts.template(data);
+        render(data);
     }
 
     // Events (delegated, attached once)
@@ -85,10 +89,23 @@ export function mountView(opts: ViewOptions) {
         }
     }
 
-    return {
+    function render(data: any) {
+        el.innerHTML = Array.isArray(data)
+            ? data.map(opts.template).join("")
+            : opts.template(data);
+    }
+
+    const base: UiComponent & {
+        load: typeof load;
+        render: typeof render;
+    } = {
+        element: el,
+        mount: () => {},
         load,
-        element: el
+        render
     };
+
+    return Object.assign(base, extra ?? {}) as UiComponent & typeof base & Extra;
 }
 
 export type MountView = ReturnType<typeof mountView>;
