@@ -3,7 +3,7 @@ import { VqlQueryRaw } from "@wxn0brp/vql-client/dist/vql";
 import { UiComponent } from "../types";
 
 export type QueryFunction<T = any> = (...any: any[]) => Promise<T>;
-export type EmptyDataMode = "append" | "prepend" | "replace";
+export type TemplateDataMode = "append" | "prepend" | "replace";
 
 export interface ViewOptions {
     selector: string | HTMLElement;
@@ -14,7 +14,7 @@ export interface ViewOptions {
     sort?: string | ((a: any, b: any) => number);
     template: (item: any) => string;
     emptyData?: string;
-    emptyDataMode?: EmptyDataMode;
+    templateDataMode?: TemplateDataMode;
     events?: {
         [eventType: string]: {
             [selector: string]: (el: HTMLElement, e: Event) => void;
@@ -73,7 +73,7 @@ export function mountView<Extra extends Record<string, any> = {}>(
         }
 
         if (opts.onDataSort) opts.onDataSort(data);
-        render(data, opts.emptyDataMode ?? "replace");
+        render(data, opts.templateDataMode ?? "replace");
     }
 
     // Events (delegated, attached once)
@@ -92,7 +92,7 @@ export function mountView<Extra extends Record<string, any> = {}>(
         }
     }
 
-    function render(data: any, mode: EmptyDataMode = "replace") {
+    function render(data: any, mode: TemplateDataMode = "replace") {
         let res: string = "";
         let empty = false;
 
@@ -157,3 +157,4 @@ export function mountView<Extra extends Record<string, any> = {}>(
 
 export type MountView = ReturnType<typeof mountView>;
 export * as uiHelpers from "./helpers";
+export * as infinityScroll from "./infinityScroll";
