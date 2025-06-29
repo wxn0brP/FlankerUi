@@ -2,8 +2,8 @@ import { fetchVQL } from "@wxn0brp/vql-client";
 import { VqlQueryRaw } from "@wxn0brp/vql-client/dist/vql";
 import { UiComponent } from "../types";
 
-export type QueryFunction<T=any> = (...any: any[]) => Promise<T>;
-export type emptyDataMode = "append" | "prepend" | "replace";
+export type QueryFunction<T = any> = (...any: any[]) => Promise<T>;
+export type EmptyDataMode = "append" | "prepend" | "replace";
 
 export interface ViewOptions {
     selector: string | HTMLElement;
@@ -14,7 +14,7 @@ export interface ViewOptions {
     sort?: string | ((a: any, b: any) => number);
     template: (item: any) => string;
     emptyData?: string;
-    emptyDataMode?: emptyDataMode;
+    emptyDataMode?: EmptyDataMode;
     events?: {
         [eventType: string]: {
             [selector: string]: (el: HTMLElement, e: Event) => void;
@@ -92,30 +92,53 @@ export function mountView<Extra extends Record<string, any> = {}>(
         }
     }
 
-    function render(data: any, mode: emptyDataMode = "replace") {
+    function render(data: any, mode: EmptyDataMode = "replace") {
         let res: string = "";
         let empty = false;
+
+        // Check if data is empty
         if (
             (Array.isArray(data) && data.length === 0) ||
-            (typeof data === "object" && Object.keys(data).length === 0) || 
-            (data === null || data === undefined)
+            (typeof data === "object" && data !== null && Object.keys(data).length === 0) ||
+            data === null ||
+            data === undefined
         ) {
             res = opts.emptyData ?? "";
             empty = true;
         } else {
-           res = Array.isArray(data) ? data.map(opts.template).join(""): opts.template(data)
+            res = Array.isArray(data) ? data.map(opts.template).join("") : opts.template(data);
         }
 
-        if (mode === "append") {
-            // if empty data and el already has content, do nothing
-            if (empty && el.innerHTML) return;
-            // else render or see opts.emptyData
-            el.innerHTML += res;
-        } else if (mode === "prepend") {
-            if (empty && el.innerHTML) return;
-            el.innerHTML = res + el.innerHTML;
+        // Handle mode
+        if (mode === "append" || mode === "prepend") {
+            if (empty) {
+                // If data is empty:
+                // - if the element already has some content (and hasn't been marked as empty before), do nothing
+                if (el.innerHTML.trim() !== "" && el.getAttribute("data-fu-empty") !== "true") {
+                    return;
+                }
+                // Otherwise, set the fallback
+                el.innerHTML = res;
+                el.setAttribute("data-fu-empty", "true");
+            } else {
+                // Data is not empty:
+                // If there was a fallback, remove it and start from a clean state
+                if (el.getAttribute("data-fu-empty") === "true") {
+                    el.innerHTML = res;
+                } else {
+                    // Otherwise, append/prepend
+                    el.innerHTML = mode === "append" ? el.innerHTML + res : res + el.innerHTML;
+                }
+                el.removeAttribute("data-fu-empty");
+            }
         } else {
+            // Replace mode – always replaces
             el.innerHTML = res;
+            if (empty) {
+                el.setAttribute("data-fu-empty", "true");
+            } else {
+                el.removeAttribute("data-fu-empty");
+            }
         }
     }
 
@@ -124,7 +147,7 @@ export function mountView<Extra extends Record<string, any> = {}>(
         render: typeof render;
     } = {
         element: el,
-        mount: () => {},
+        mount: () => { },
         load,
         render
     };
