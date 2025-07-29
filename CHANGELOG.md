@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.5](https://github.com/wxn0brp/FlankerUi/compare/v0.2.4...v0.2.5) (2025-07-29)
+
+
+### Features
+
+* infinityScroll helper ([d4293d2](https://github.com/wxn0brp/FlankerUi/commit/d4293d21dc246bbc3d27a5a4cde5b9ced6363b30))
+* update store ([2634b01](https://github.com/wxn0brp/FlankerUi/commit/2634b018cc57e615caf914be9ccbc9eba7467a93))
+
+
+### Bug Fixes
+
+* render data fallback ([58c674b](https://github.com/wxn0brp/FlankerUi/commit/58c674be6cc70fcfc58b6283fd8127b288dc3c91))
+
 ### [0.2.4](https://github.com/wxn0brp/FlankerUi/compare/v0.2.3...v0.2.4) (2025-06-28)
 
 
