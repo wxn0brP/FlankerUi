@@ -12,9 +12,9 @@ export type StoreType<T> = {
 
 export interface ReactiveCell<T> {
     get(): T;
-    set(val: T, propagate?: number): void;
-    subscribe(listener: (value: T) => void): void;
-    notify(propagate?: number): void;
+    set(val: T, propagate?: number): this;
+    subscribe(listener: (value: T) => void): this;
+    notify(propagate?: number): this;
     value: T;
     listeners: Array<(value: T) => void>;
 }
@@ -29,9 +29,9 @@ export function createStore<T extends Schema>(schema: T, parent?: any): StoreTyp
                 schema[key] !== null;
 
             if (isStore) {
-                store[key] = createStore(schema[key], parent as any);
+                store[key] = createStore(schema[key], parent);
             } else {
-                store[key] = createStoreValue(store, schema[key]);
+                store[key] = new ReactiveCell(schema[key], parent);
             }
         }
     }
@@ -43,6 +43,7 @@ export function createStore<T extends Schema>(schema: T, parent?: any): StoreTyp
         if (propagate > 0 && parent && typeof parent.notify === "function") {
             parent.notify(propagate - 1);
         }
+        return store;
     }
 
     store.get = () => {
@@ -69,30 +70,41 @@ export function createStore<T extends Schema>(schema: T, parent?: any): StoreTyp
 
     store.subscribe = (listener: (value: T) => void) => {
         store.listeners.push(listener);
+        return store;
     }
 
     return store as StoreType<T>;
 }
 
 export function createStoreValue<T>(parent: any, data: T): ReactiveCell<T> {
-    const cell: ReactiveCell<T> = {
-        value: data,
-        listeners: [],
-        get: () => cell.value,
-        set: (newVal: T, propagation: number = 0) => {
-            cell.value = newVal;
-            cell.notify(propagation);
-        },
-        notify: (propagation: number = 0) => {
-            cell.listeners.forEach(listener => listener(cell.value));
-            if (propagation > 0 && parent && typeof parent.notify === "function") {
-                parent.notify(propagation - 1);
-            }
-        },
-        subscribe: (listener: (value: T) => void) => {
-            cell.listeners.push(listener);
-        },
-    };
+    return new ReactiveCell(data, parent);
+}
 
-    return cell;
+export class ReactiveCell<T> implements ReactiveCell<T> {
+    listeners: Array<(value: T) => void> = [];
+
+    constructor(public value: T, public parent?: ReactiveCell<any>) { }
+
+    get(): T {
+        return this.value;
+    }
+
+    set(newVal: T, propagation: number = 0): this {
+        this.value = newVal;
+        this.notify(propagation);
+        return this;
+    }
+
+    notify(propagation: number = 0): this {
+        this.listeners.forEach(listener => listener(this.value));
+        if (propagation > 0 && this.parent && typeof this.parent.notify === "function") {
+            this.parent.notify(propagation - 1);
+        }
+        return this;
+    }
+
+    subscribe(listener: (value: T) => void): this {
+        this.listeners.push(listener);
+        return this;
+    }
 }
