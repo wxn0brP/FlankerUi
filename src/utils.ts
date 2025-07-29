@@ -2,9 +2,9 @@ export function rand(min: number, max: number): number {
     return Math.round(Math.random() * (max - min) + min);
 }
 
-export function round(a: number, b: number): number {
-    const factor = Math.pow(10, b);
-    return Math.round(a * factor) / factor;
+export function round(number: number, decimalPlaces: number): number {
+    const multiplier = Math.pow(10, decimalPlaces);
+    return Math.round(number * multiplier) / multiplier;
 }
 
 export function clamp(min: number, value: number, max: number): number {
