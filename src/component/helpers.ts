@@ -13,7 +13,7 @@ export function bindHandlers(root: HTMLElement, map: Record<string, () => void>,
     }
 }
 
-export function renderList<T>(
+export function renderList<T=any>(
     container: HTMLElement,
     items: T[],
     renderItem: (item: T, index: number) => string,
@@ -26,7 +26,7 @@ export function renderList<T>(
     container.innerHTML = items.map(renderItem).join("");
 }
 
-export function renderListNodes<T>(
+export function renderListNodes<T=any>(
     container: HTMLElement,
     items: T[],
     renderItem: (item: T, index: number) => HTMLElement,
@@ -42,7 +42,8 @@ export function renderListNodes<T>(
     }
 }
 
-export function watchInput(el: HTMLInputElement, store: ReactiveCell<string>) {
+export function watchInput(el: HTMLInputElement, store: ReactiveCell<string>, setFromElement = false) {
+    if(setFromElement) store.set(el.value);
     el.addEventListener("input", () => {
         store.set(el.value);
     });
@@ -51,7 +52,8 @@ export function watchInput(el: HTMLInputElement, store: ReactiveCell<string>) {
     });
 }
 
-export function watchSelect(el: HTMLSelectElement, store: ReactiveCell<string>) {
+export function watchSelect(el: HTMLSelectElement, store: ReactiveCell<string>, setFromElement = false) {
+    if(setFromElement) store.set(el.value);
     el.addEventListener("change", () => {
         store.set(el.value);
     });
@@ -60,7 +62,8 @@ export function watchSelect(el: HTMLSelectElement, store: ReactiveCell<string>) 
     });
 }
 
-export function watchCheckbox(el: HTMLInputElement, store: ReactiveCell<boolean>) {
+export function watchCheckbox(el: HTMLInputElement, store: ReactiveCell<boolean>, setFromElement = false) {
+    if(setFromElement) store.set(el.checked);
     el.addEventListener("change", () => {
         store.set(el.checked);
     });
