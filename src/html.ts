@@ -97,6 +97,20 @@ const proto = {
         return this;
     },
 
+    async fadeInP(this: HTMLElement, display: string = "block"): Promise<HTMLElement> {
+        new Promise<void>((resolve) => {
+            this.fadeIn(display, resolve);
+        });
+        return this;
+    },
+
+    async fadeOutP(): Promise<HTMLElement> {
+        new Promise<void>((resolve) => {
+            this.fadeOut(resolve);
+        });
+        return this;
+    },
+
     fade: true,
     fadeToggle(this: HTMLElement): HTMLElement {
         this.fade ? this.fadeOut() : this.fadeIn();
@@ -113,21 +127,31 @@ const proto = {
         return this;
     },
 
-    qs<T=HTMLDivElement>(this: HTMLElement, selector: string): T {
+    qs<T = HTMLDivElement>(this: HTMLElement, selector: string): T {
         return this.querySelector(selector) as T;
     },
 
-    qsi<T=HTMLInputElement>(this: HTMLElement, selector: string): T {
+    qsi<T = HTMLInputElement>(this: HTMLElement, selector: string): T {
         return this.querySelector(selector) as T;
     },
 
-    qi<T=HTMLDivElement>(this: HTMLElement, id: string): T {
+    qi<T = HTMLDivElement>(this: HTMLElement, id: string): T {
         return this.querySelector(`[data-id="${id}"]`) as T;
     },
 
-    qii<T=HTMLInputElement>(this: HTMLElement, id: string): T {
+    qii<T = HTMLInputElement>(this: HTMLElement, id: string): T {
         return this.querySelector(`[data-id="${id}"]`) as T;
     },
 };
 
 Object.assign(HTMLElement.prototype, proto);
+Object.assign(document, proto);
+Object.assign(document.body, proto);
+Object.assign(document.documentElement, proto);
+for (const name of ["qs", "qsi", "qi", "qii"]) {
+    if (typeof proto[name] === "function") {
+        window[name] = function (...args: any[]) {
+            return proto[name].apply(document, args);
+        };
+    }
+}
