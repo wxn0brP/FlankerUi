@@ -1,13 +1,19 @@
-import { fetchVQL } from "@wxn0brp/vql-client";
 import { VqlQueryRaw } from "@wxn0brp/vql-client/dist/vql";
 import { UiComponent } from "../types";
+import type { fetchVQL as fetchVQLType } from "@wxn0brp/vql-client";
+
+let _fetchVQL: typeof fetchVQLType;
+const fetchVQL = async (q: VqlQueryRaw) => {
+    if (!_fetchVQL) _fetchVQL = (window as any)?.VQLClient?.fetchVQL || (await import("@wxn0brp/vql-client")).fetchVQL;
+    return _fetchVQL(q);
+}
 
 export type QueryFunction<T = any> = (...any: any[]) => Promise<T>;
 export type TemplateDataMode = "append" | "prepend" | "replace";
 
-export interface ViewOptions {
+export interface ViewOptions<VQL=any> {
     selector: string | HTMLElement;
-    query?: VqlQueryRaw | QueryFunction<VqlQueryRaw>;
+    query?: VqlQueryRaw<VQL> | QueryFunction<VqlQueryRaw<VQL>>;
     queryFunction?: QueryFunction;
     queryArgs?: { [key: string]: any };
     transform?: (data: any) => any;
@@ -37,22 +43,22 @@ export function mountView<Extra extends Record<string, any> = {}>(
 
     async function load(args: { [key: string]: any } = {}) {
         let data: any;
-        if (opts.queryFunction) {
-            data = await opts.queryFunction(Object.assign({}, opts.queryArgs, args));
+        const assignArgs = Object.assign({}, opts.queryArgs, args);
 
-        } else if (typeof opts.query === "string") {
+        if (opts.queryFunction)
+            data = await opts.queryFunction(assignArgs);
+
+        else if (typeof opts.query === "string")
             data = await fetchVQL({ query: opts.query, var: args });
 
-        } else if (typeof opts.query === "function") {
-            const query = await opts.query(Object.assign({}, opts.queryArgs, args));
-            data = await fetchVQL(query);
+        else if (typeof opts.query === "function")
+            data = await fetchVQL(await opts.query(assignArgs));
 
-        } else if (typeof opts.query === "object" && !Array.isArray(opts.query)) {
+        else if (typeof opts.query === "object" && !Array.isArray(opts.query))
             data = await fetchVQL(opts.query);
 
-        } else {
-            throw new Error("Invalid query type");
-        }
+        else
+            data = assignArgs;
 
         if (opts.onData) opts.onData(data);
         if (opts.transform) data = opts.transform(data);

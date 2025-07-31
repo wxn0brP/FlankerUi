@@ -16,11 +16,18 @@
         "build": "tsc && tsc-alias && node build.js"
     },
     "devDependencies": {
-        "@types/node": "^22.12.0",
-        "@wxn0brp/vql-client": ">=0.0.8",
+        "@wxn0brp/vql-client": ">=0.1.0",
         "esbuild": "^0.25.5",
         "tsc-alias": "^1.8.10",
         "typescript": "^5.7.3"
+    },
+    "peerDependencies": {
+        "@wxn0brp/vql-client": ">=0.1.0"
+    },
+    "peerDependenciesMeta": {
+        "@wxn0brp/vql-client": {
+            "optional": true
+        }
     },
     "files": [
         "dist"
@@ -36,8 +43,5 @@
             "import": "./dist/*.js",
             "default": "./dist/*.js"
         }
-    },
-    "peerDependencies": {
-        "@wxn0brp/vql-client": ">=0.0.8"
     }
 }
