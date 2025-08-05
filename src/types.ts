@@ -18,9 +18,13 @@ declare global {
         add(child: HTMLElement): HTMLElement;
         addUp(child: HTMLElement): HTMLElement;
         fade: boolean;
+        /** query selector */
         qs<T = HTMLDivElement>(selector: string): T;
+        /** query selector input */
         qsi<T = HTMLInputElement>(selector: string): T;
+        /** query id */
         qi<T = HTMLDivElement>(id: string): T;
+        /** query id input */
         qii<T = HTMLInputElement>(id: string): T;
     }
 
@@ -37,9 +41,13 @@ declare global {
     interface HTMLTextAreaElement extends FUI_value<HTMLTextAreaElement> { }
 
     var lo: typeof console.log;
+    /** query selector */
     function qs<T = HTMLDivElement>(selector: string): T;
+    /** query selector input */
     function qsi<T = HTMLInputElement>(selector: string): T;
+    /** query id */
     function qi<T = HTMLDivElement>(id: string): T;
+    /** query id input */
     function qii<T = HTMLInputElement>(id: string): T;
 }
 
