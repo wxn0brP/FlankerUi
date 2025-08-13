@@ -8,7 +8,7 @@ export type StoreType<T> = {
     ? ReactiveCell<T[K]>
     : (StoreType<T[K]> & ReactiveCell<T[K]>)
     : ReactiveCell<T[K]>;
-};
+} & ReactiveCell<T>;
 
 export interface ReactiveCell<T> {
     isStore: boolean;
@@ -30,15 +30,16 @@ export function createStore<T extends Schema>(schema: T, parent?: any): StoreTyp
                 schema[key] !== null;
 
             if (isStore) {
-                store[key] = createStore(schema[key], parent);
+                store[key] = createStore(schema[key], store);
             } else {
-                store[key] = new ReactiveCell(schema[key], parent);
+                store[key] = new ReactiveCell(schema[key], store);
             }
         }
     }
-    store._isStore = true;
+    store.isStore = true;
     store.listeners = [];
     store.value = undefined;
+    store.parent = parent;
 
     store.notify = (propagate: number = 0) => {
         store.listeners.forEach(listener => listener(store));
@@ -57,7 +58,9 @@ export function createStore<T extends Schema>(schema: T, parent?: any): StoreTyp
                 key === "notify" ||
                 key === "get" ||
                 key === "set" ||
-                key === "subscribe"
+                key === "subscribe" ||
+                key === "parent" ||
+                key === "isStore"
             ) continue;
             if (store.hasOwnProperty(key)) {
                 obj[key] = store[key];
