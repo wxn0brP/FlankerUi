@@ -11,6 +11,7 @@ export type StoreType<T> = {
 };
 
 export interface ReactiveCell<T> {
+    isStore: boolean;
     get(): T;
     set(val: T, propagate?: number): this;
     subscribe(listener: (value: T) => void): this;
@@ -35,6 +36,7 @@ export function createStore<T extends Schema>(schema: T, parent?: any): StoreTyp
             }
         }
     }
+    store._isStore = true;
     store.listeners = [];
     store.value = undefined;
 
@@ -82,6 +84,7 @@ export function createStoreValue<T>(parent: any, data: T): ReactiveCell<T> {
 
 export class ReactiveCell<T> implements ReactiveCell<T> {
     listeners: Array<(value: T) => void> = [];
+    isStore = false;
 
     constructor(public value: T, public parent?: ReactiveCell<any>) { }
 

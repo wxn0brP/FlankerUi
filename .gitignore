@@ -4,3 +4,6 @@ dist
 yarn.lock
 package-lock.json
 .suglite_history
+
+test.ts
+index.html
