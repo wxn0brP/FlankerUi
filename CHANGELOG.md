@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.3.2](https://github.com/wxn0brp/FlankerUi/compare/v0.3.1...v0.3.2) (2025-08-14)
+
+
+### Features
+
+* update deps ([4ea20b9](https://github.com/wxn0brp/FlankerUi/commit/4ea20b946feb7e44e01b40f7d66eaf1dc7c796fc))
+
 ### [0.3.1](https://github.com/wxn0brp/FlankerUi/compare/v0.3.0...v0.3.1) (2025-08-14)
 
 
