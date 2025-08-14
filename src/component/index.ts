@@ -1,9 +1,9 @@
-import { VqlQueryRaw } from "@wxn0brp/vql-client/dist/vql";
+import { VQLUQ } from "@wxn0brp/vql-client/dist/vql";
 import { UiComponent } from "../types";
 import type { fetchVQL as fetchVQLType } from "@wxn0brp/vql-client";
 
 let _fetchVQL: typeof fetchVQLType;
-const fetchVQL = async (q: VqlQueryRaw) => {
+const fetchVQL = async (q: VQLUQ) => {
     if (!_fetchVQL) _fetchVQL = (window as any)?.VQLClient?.fetchVQL || (await import("@wxn0brp/vql-client")).fetchVQL;
     return _fetchVQL(q);
 }
@@ -11,9 +11,9 @@ const fetchVQL = async (q: VqlQueryRaw) => {
 export type QueryFunction<T = any> = (...any: any[]) => Promise<T>;
 export type TemplateDataMode = "append" | "prepend" | "replace";
 
-export interface ViewOptions<VQL=any> {
+export interface ViewOptions<VQL = any> {
     selector: string | HTMLElement;
-    query?: VqlQueryRaw<VQL> | QueryFunction<VqlQueryRaw<VQL>>;
+    query?: VQLUQ<VQL> | QueryFunction<VQLUQ<VQL>>;
     queryFunction?: QueryFunction;
     queryArgs?: { [key: string]: any };
     transform?: (data: any) => any;
