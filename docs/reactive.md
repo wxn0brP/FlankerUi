@@ -24,12 +24,39 @@ initReactiveHTML(store);
 
 ## Basic Syntax
 
-Use `data-r` attributes on HTML elements to define reactive bindings:
+Use `data-r`, `data-r-0`, `data-r-1` attributes on HTML elements to define reactive bindings:
 
 ```html
 <!-- Format: path:type:attrName[:expr] -->
-<div data-r="user.name:attr:textContent"></div>
+<div data-r="user.name:textContent"></div>
 ```
+
+For `textContent` and `innerHTML`, the `attrName` part is ignored but still required:
+
+```html
+<!-- For textContent and innerHTML, attrName is ignored but must be present -->
+<div data-r="user.name:textContent"></div>
+```
+
+The available types are:
+- `attr` - for HTML attributes
+- `style` - for CSS styles
+- `class` - for CSS classes
+- `textContent` - for text content
+- `innerHTML` - for HTML content
+
+When no type is specified, it defaults to `style`. However, for explicit clarity, it's recommended to always specify the type:
+
+```html
+<!-- This binds to the backgroundColor style property -->
+<div data-r="theme:style:backgroundColor:v === 'dark' ? '#333' : '#fff'"></div>
+```
+
+The format is `path:type:attrName[:expr]` where:
+- `path` is the path to the value in the store
+- `type` is the binding type (`attr`, `style`, `class`, `textContent`, or `innerHTML`)
+- `attrName` is the attribute name, style property, or class name to bind to (required but ignored for `textContent` and `innerHTML`)
+- `expr` is an optional JavaScript expression that transforms the value (receives the store value as `v`)
 
 ## Attribute Binding
 
@@ -41,9 +68,6 @@ Update HTML attributes based on store values:
 
 <!-- Set image source -->
 <img data-r="user.avatar:attr:src" />
-
-<!-- Set input placeholder -->
-<input data-r="user.name:attr:placeholder:'Enter name for ' + v" />
 ```
 
 ## Style Binding
@@ -53,9 +77,6 @@ Update CSS styles directly from store values:
 ```html
 <!-- Background color based on theme -->
 <div data-r="theme:style:backgroundColor:v === 'dark' ? '#333' : '#fff'">Content</div>
-
-<!-- Width based on percentage -->
-<div data-r="counter:style:width:(v * 10) + '%'">Progress</div>
 
 <!-- Multiple styles -->
 <div data-r="theme:style:backgroundColor:v === 'dark' ? '#333' : '#fff', theme:style:color:v === 'dark' ? '#fff' : '#333'">
@@ -84,7 +105,9 @@ Separate multiple bindings with commas:
 <input data-r="isLoading:attr:disabled:v, isLoading:class:loading" />
 
 <!-- Multiple style properties -->
-<div data-r="theme:style:backgroundColor:v === 'dark' ? '#333' : '#fff', theme:style:color:v === 'dark' ? '#fff' : '#333'">
+<div 
+  data-r-0="theme:style:backgroundColor:v === 'dark' ? '#333' : '#fff'"
+  data-r-1="theme:style:color:v === 'dark' ? '#fff' : '#333'">
   Content
 </div>
 ```
@@ -94,21 +117,17 @@ Separate multiple bindings with commas:
 Use `data-base-key` to simplify paths:
 
 ```html
-<div data-base-key="user">
-  <!-- Binds to user.name -->
-  <span data-r="name:attr:textContent"></span>
+<!-- Binds to user.name -->
+<span data-base-key="user" data-r="name:textContent"></span>
   
-  <!-- Binds to user.isActive -->
-  <button data-r="isActive:attr:disabled:!v">Edit</button>
-</div>
+<!-- Binds to user.isActive -->
+<button data-base-key="user" data-r="isActive:attr:disabled:!v">Edit</button>
 ```
 
 ## Expression Syntax
 
-Expressions are JavaScript code that receive the store value as `v`:
+Expressions are JavaScript code that receive the store value as `v` (JS Statement):
 
-- `!v` - Inverts a boolean value
+- `!` - Inverts a boolean value
 - `v === 'value'` - Compare with a string
-- `(v * 100) + '%'` - Transform a number to a percentage
-- `'Prefix ' + v` - Concatenate strings
 - `v > 10 ? 'high' : 'low'` - Conditional values

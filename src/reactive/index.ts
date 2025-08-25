@@ -10,8 +10,9 @@ export function reactFromAttr(attrVal: string, el: HTMLElement, params: Reactive
     parts.forEach(part => {
         // format: path:type:attrName[:expr]
         // eg "btn.showButton:attr:disabled:v === false"
+        // See docs/reactive.md
         const [relativePath, _type, attrName, ...exprArr] = part.split(":").map(s => s.trim());
-        if (!relativePath || !attrName) return;
+        if (!relativePath) return;
         const elAccessPath = elBaseKey ? elBaseKey + "." + relativePath : relativePath;
 
         if (elAccessPath !== [...params.accessPath, params.key].join(".")) return;
@@ -46,6 +47,11 @@ export function reactFromAttr(attrVal: string, el: HTMLElement, params: Reactive
                 if (result) el.classList.add(attrName);
                 else el.classList.remove(attrName);
                 break;
+            case "textContent":
+                el.textContent = result;
+                break;
+            case "innerHTML":
+                el.innerHTML = result;
             default:
                 console.warn("Unknown reactive type:", type);
                 break;
