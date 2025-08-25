@@ -8,8 +8,8 @@ export function reactFromAttr(attrVal: string, el: HTMLElement, params: Reactive
     const elBaseKey = el.getAttribute("data-base-key");
 
     parts.forEach(part => {
-        // format: path/:type/:attrName[/:expr]
-        // eg "btn.showButton/:attr/:disabled:v === false"
+        // format: path:type:attrName[:expr]
+        // eg "btn.showButton:attr:disabled:v === false"
         const [relativePath, _type, attrName, ...exprArr] = part.split(":").map(s => s.trim());
         if (!relativePath || !attrName) return;
         const elAccessPath = elBaseKey ? elBaseKey + "." + relativePath : relativePath;
