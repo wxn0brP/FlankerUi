@@ -6,8 +6,7 @@ esbuild.build({
         "src/me.ts"
     ],
     outdir: "dist",
-    format: "esm",
-    target: "esnext",
+    format: "iife",
     bundle: true,
     sourcemap: true,
     external: [],
