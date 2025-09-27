@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.4.0](https://github.com/wxn0brp/FlankerUi/compare/v0.3.2...v0.4.0) (2025-09-27)
+
+
+### ⚠ BREAKING CHANGES
+
+* update html interface
+
+### Features
+
+* implement store.set ([8666b21](https://github.com/wxn0brp/FlankerUi/commit/8666b2108c7ceadb2e6f75b493dff18385e3326b))
+* update html interface ([9a1c8ec](https://github.com/wxn0brp/FlankerUi/commit/9a1c8ec000c3e3d2dcb3682074b2097efa37b28f))
+* update reactive and docs ([f05c652](https://github.com/wxn0brp/FlankerUi/commit/f05c65294141cf55f8a92ef1e9df4b18256df85e))
+
+
+### Bug Fixes
+
+* build format html.js & me.js to iife ([2b05c9f](https://github.com/wxn0brp/FlankerUi/commit/2b05c9f2a75d8c2360b5031ffd8d81665496b02a))
+* reactive ([243edb2](https://github.com/wxn0brp/FlankerUi/commit/243edb29d50417a0fc3e4f3e250b4eaa23bb248b))
+* reactive types ([8ad31d2](https://github.com/wxn0brp/FlankerUi/commit/8ad31d2a52a903f58227fb623beada75f59d8e9b))
+
 ### [0.3.2](https://github.com/wxn0brp/FlankerUi/compare/v0.3.1...v0.3.2) (2025-08-14)
 
 
