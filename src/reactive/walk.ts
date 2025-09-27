@@ -1,4 +1,4 @@
-import { ReactiveCell, StoreType } from "../store";
+import { ReactiveCell, storeKeys, StoreType } from "../store";
 
 export interface ReactiveCbParams {
     cell: ReactiveCell<any>;
@@ -14,7 +14,9 @@ export function subscribeToEntireStore(
     callback: ReactiveCallback,
     accessPath: (string)[] = []
 ): void {
+    if (!store) return;
     for (const key in store) {
+        if (storeKeys.includes(key)) continue;
         const cell = store[key];
         if (!cell || cell?.isStore === undefined) continue;
 

@@ -20,6 +20,8 @@ export interface ReactiveCell<T> {
     listeners: Array<(value: T) => void>;
 }
 
+export const storeKeys = ["listeners", "value", "notify", "get", "set", "subscribe", "parent", "isStore"];
+
 export function createStore<T extends Schema>(schema: T, parent?: any): StoreType<T> {
     const store: any = {};
     for (const key in schema) {
@@ -52,16 +54,7 @@ export function createStore<T extends Schema>(schema: T, parent?: any): StoreTyp
     store.get = () => {
         const obj: any = {};
         for (const key in store) {
-            if (
-                key === "listeners" ||
-                key === "value" ||
-                key === "notify" ||
-                key === "get" ||
-                key === "set" ||
-                key === "subscribe" ||
-                key === "parent" ||
-                key === "isStore"
-            ) continue;
+            if (storeKeys.includes(key)) continue;
             if (store.hasOwnProperty(key)) {
                 obj[key] = store[key];
             }
