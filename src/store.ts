@@ -62,8 +62,29 @@ export function createStore<T extends Schema>(schema: T, parent?: any): StoreTyp
         return obj;
     }
 
-    store.set = () => {
-        throw new Error("You can't set the entire store");
+    store.set = (data: Partial<T>, propagate: number = 0) => {
+        for (const key in data) {
+            if (storeKeys.includes(key)) {
+                throw new Error(`Reserved key: ${key}`);
+            }
+            if (!store.hasOwnProperty(key)) {
+                throw new Error(`Unknown key: ${key}`);
+            }
+            const target = store[key];
+            if (target.isStore) {
+                throw new Error(`Cannot set nested store: ${key}`);
+            }
+            const value = data[key as keyof T];
+            if (typeof value === "object" && value !== null && !Array.isArray(value)) {
+                throw new Error(`Invalid value for key: ${key}`);
+            }
+        }
+
+        for (const key in data) {
+            store[key].set(data[key as keyof T], propagate);
+        }
+
+        return store;
     }
 
     store.subscribe = (listener: (value: T) => void) => {
