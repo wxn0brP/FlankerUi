@@ -2,8 +2,8 @@ declare global {
     interface FUI {
         html(): string;
         html(v: string): HTMLElement;
-        on(event: string, fn: EventListenerOrEventListenerObject): void;
-        css(style: string | Record<string, string>, val?: string | null): void;
+        on(event: string, fn: EventListenerOrEventListenerObject): HTMLElement;
+        css(style: string | Record<string, string>, val?: string | null): HTMLElement;
         attrib(att: string): string;
         attrib(att: string, arg: string): HTMLElement;
         clA(...arg: string[]): HTMLElement;
@@ -18,14 +18,17 @@ declare global {
         add(child: HTMLElement): HTMLElement;
         addUp(child: HTMLElement): HTMLElement;
         fade: boolean;
-        /** query selector */
-        qs<T = HTMLDivElement>(selector: string): T;
-        /** query selector input */
-        qsi<T = HTMLInputElement>(selector: string): T;
-        /** query id */
-        qi<T = HTMLDivElement>(id: string): T;
-        /** query id input */
-        qii<T = HTMLInputElement>(id: string): T;
+        /**
+         * Query selector on the current element.
+         * If did is truthy, it appends [data-id="${selector}"] to the selector.
+         * @template T The type of the element to query
+         * @param {string} selector The query selector string
+         * @param {any} [did=0] The value to determine if the selector should be modified
+         * @return {T} The queried element
+         */
+        qs<T = HTMLDivElement>(selector: string, did?: any): T;
+        /** alias for qs but T=HTMLInputElement */
+        qi<T = HTMLInputElement>(selector: string, did?: any): T;
     }
 
     interface FUI_value<T> {
@@ -41,14 +44,17 @@ declare global {
     interface HTMLTextAreaElement extends FUI_value<HTMLTextAreaElement> { }
 
     var lo: typeof console.log;
-    /** query selector */
-    function qs<T = HTMLDivElement>(selector: string): T;
-    /** query selector input */
-    function qsi<T = HTMLInputElement>(selector: string): T;
-    /** query id */
-    function qi<T = HTMLDivElement>(id: string): T;
-    /** query id input */
-    function qii<T = HTMLInputElement>(id: string): T;
+    /**
+     * Query selector on the document.
+     * If did is truthy, it appends [data-id="${selector}"] to the selector.
+     * @template T The type of the element to query
+     * @param {string} selector The query selector string
+     * @param {any} [did=0] The value to determine if the selector should be modified
+     * @return {T} The queried element
+     */
+    function qs<T = HTMLDivElement>(selector: string, did?: any): T;
+    /** alias for qs but T=HTMLInputElement */
+    function qi<T = HTMLInputElement>(selector: string, did?: any): T;
 }
 
 export interface UiComponent {

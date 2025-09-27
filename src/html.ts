@@ -17,11 +17,12 @@ const proto = {
         }
     },
 
-    on(this: HTMLElement, event: string, fn: EventListenerOrEventListenerObject): void {
+    on(this: HTMLElement, event: string, fn: EventListenerOrEventListenerObject) {
         this.addEventListener(event, fn);
+        return this;
     },
 
-    css(this: HTMLElement, style: string | Record<string, string>, val: string | null = null): void {
+    css(this: HTMLElement, style: string | Record<string, string>, val: string | null = null) {
         if (typeof style === "string") {
             if (val !== null) {
                 this.style[style] = val;
@@ -31,6 +32,7 @@ const proto = {
         } else {
             Object.assign(this.style, style);
         }
+        return this;
     },
 
     attrib(this: HTMLElement, att: string, arg: string | null = null): string | HTMLElement {
@@ -127,20 +129,13 @@ const proto = {
         return this;
     },
 
-    qs<T = HTMLDivElement>(this: HTMLElement, selector: string): T {
+    qs<T = HTMLDivElement>(this: HTMLElement, selector: string, did: any = 0): T {
+        if (!!did) selector = `[data-id="${selector}"]`;
         return this.querySelector(selector) as T;
     },
 
-    qsi<T = HTMLInputElement>(this: HTMLElement, selector: string): T {
-        return this.querySelector(selector) as T;
-    },
-
-    qi<T = HTMLDivElement>(this: HTMLElement, id: string): T {
-        return this.querySelector(`[data-id="${id}"]`) as T;
-    },
-
-    qii<T = HTMLInputElement>(this: HTMLElement, id: string): T {
-        return this.querySelector(`[data-id="${id}"]`) as T;
+    qi<T = HTMLInputElement>(this: HTMLElement, selector: string, did: any = 0): T {
+        return this.qs<T>(selector, did) as T;
     },
 };
 
@@ -148,7 +143,7 @@ Object.assign(HTMLElement.prototype, proto);
 Object.assign(document, proto);
 Object.assign(document.body, proto);
 Object.assign(document.documentElement, proto);
-for (const name of ["qs", "qsi", "qi", "qii"]) {
+for (const name of ["qs", "qi"]) {
     if (typeof proto[name] === "function") {
         window[name] = function (...args: any[]) {
             return proto[name].apply(document, args);
