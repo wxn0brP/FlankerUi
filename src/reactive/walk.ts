@@ -10,7 +10,7 @@ export interface ReactiveCbParams {
 export type ReactiveCallback = (params: ReactiveCbParams) => void;
 
 export function subscribeToEntireStore(
-    store: StoreType<any>,
+    store: any,
     callback: ReactiveCallback,
     accessPath: (string)[] = []
 ): void {

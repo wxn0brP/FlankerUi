@@ -59,7 +59,7 @@ export function reactFromAttr(attrVal: string, el: HTMLElement, params: Reactive
     });
 }
 
-export function initReactiveHTML(store: StoreType<any>, root: HTMLElement | Document = document) {
+export function initReactiveHTML<T extends StoreType<{}>>(store: T, root: HTMLElement | Document = document) {
     subscribeToEntireStore(store, (params) => {
         const elements = root.querySelectorAll<HTMLElement>(`[data-r], [data-r-0], [data-r-1]`);
 
