@@ -59,55 +59,76 @@ const proto = {
         return this;
     },
 
-    animateFade(this: HTMLElement, from: number, options: { time?: number; cb?: () => void } = {}): HTMLElement {
+    animateFade(
+        this: HTMLElement,
+        from: number,
+        options: { time?: number; cb?: () => void } = {}
+    ): HTMLElement {
         const { time = 200, cb } = options;
-        const style = this.style;
-        const steps = 50;
-        const timeToStep = time / steps;
-        const d = (from === 0 ? 1 : -1) / steps;
-        let index = 0;
-        style.opacity = from.toString();
+        const element = this;
+        const targetOpacity = from === 0 ? 1 : 0;
 
-        const interval = setInterval(() => {
-            if (index >= steps) {
-                clearInterval(interval);
+        const startOpacity = Math.min(1, Math.max(0, from));
+        const startTime = performance.now();
+
+        element.style.opacity = startOpacity.toString();
+
+        function step(currentTime: number) {
+            const elapsed = currentTime - startTime;
+            const progress = Math.min(elapsed / time, 1);
+
+            const currentOpacity = startOpacity + (targetOpacity - startOpacity) * progress;
+            element.style.opacity = currentOpacity.toString();
+
+            if (progress < 1) {
+                requestAnimationFrame(step);
+            } else {
+                element.style.opacity = targetOpacity.toString();
                 cb?.();
-                return;
             }
-            style.opacity = (parseFloat(style.opacity || "0") + d).toString();
-            index++;
-        }, timeToStep);
+        }
+
+        requestAnimationFrame(step);
         return this;
     },
 
-    fadeIn(this: HTMLElement, display: string | (() => void) = "block", cb?: () => void): HTMLElement {
-        if (typeof display === "function") {
-            cb = display;
-            display = "block";
-        }
+    fadeIn(this: HTMLElement, ...args: any): HTMLElement {
+        const opts = convert({
+            display: "string",
+            cb: "function",
+            time: "number",
+        }, args);
+
+        let { display = "block" } = opts;
 
         this.css("display", display);
-        this.animateFade(0, { cb });
+        this.animateFade(0, opts);
         this.fade = true;
         return this;
     },
 
-    fadeOut(this: HTMLElement, cb?: () => void): HTMLElement {
-        this.animateFade(1, { time: 300, cb });
-        setTimeout(() => this.css("display", "none"), 300);
+    fadeOut(this: HTMLElement, ...args: any[]): HTMLElement {
+        const opts = convert({
+            cb: "function",
+            time: "number",
+        }, args);
+        const time = opts.time ?? 300;
+        opts.time = time;
+        this.animateFade(1, opts);
+        setTimeout(() => this.css("display", "none"), time);
         this.fade = false;
         return this;
     },
 
-    async fadeInP(this: HTMLElement, display: string = "block"): Promise<HTMLElement> {
+    async fadeInP(this: HTMLElement, ...args: any[]): Promise<HTMLElement> {
         return new Promise<HTMLElement>((resolve) => {
-            this.fadeIn(display, () => resolve(this));
+            this.fadeIn(...args, () => resolve(this));
         });
     },
 
-    async fadeOutP(): Promise<HTMLElement> {
+    async fadeOutP(this: HTMLElement, ...args: any[]): Promise<HTMLElement> {
         return new Promise<HTMLElement>((resolve) => {
-            this.fadeOut(() => resolve(this));
+            this.fadeOut(...args, () => resolve(this));
         });
     },
 
@@ -136,6 +157,26 @@ const proto = {
         return this.qs<T>(selector, did) as T;
     },
 };
+
+function convert(
+    opts: Record<string, string>,
+    args: any[]
+): Record<string, any> {
+    const result: Record<string, any> = {};
+    if (args.length === 0) return result;
+    if (args.every((arg) => typeof arg === "object")) return Object.assign({}, ...args);
+
+    for (const value of args) {
+        for (const [key, expectedType] of Object.entries(opts)) {
+            if (typeof value === expectedType) {
+                result[key] = value;
+                break;
+            }
+        }
+    }
+
+    return result;
+}
 
 Object.assign(HTMLElement.prototype, proto);
 Object.assign(document, proto);

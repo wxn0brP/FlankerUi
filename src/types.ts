@@ -10,10 +10,10 @@ declare global {
         clR(...arg: string[]): HTMLElement;
         clT(className: string, force?: boolean): HTMLElement;
         animateFade(from: number, options?: { time?: number; cb?: () => void }): HTMLElement;
-        fadeIn(display?: string | (() => void), cb?: () => void): HTMLElement;
-        fadeOut(cb?: () => void): HTMLElement;
-        fadeInP(display?: string): Promise<HTMLElement>;
-        fadeOutP(): Promise<HTMLElement>;
+        fadeIn(...args: any[]): HTMLElement;
+        fadeOut(...args: any[]): HTMLElement;
+        fadeInP(...args: any[]): Promise<HTMLElement>;
+        fadeOutP(...args: any[]): Promise<HTMLElement>;
         fadeToggle(): HTMLElement;
         add(child: HTMLElement): HTMLElement;
         addUp(child: HTMLElement): HTMLElement;
