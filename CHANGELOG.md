@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.4.2](https://github.com/wxn0brp/FlankerUi/compare/v0.4.1...v0.4.2) (2025-10-02)
+
+
+### Features
+
+* rebuild fade animation ([b3a4196](https://github.com/wxn0brp/FlankerUi/commit/b3a4196e5322eed56db1fdfcdb37a8e329103d74))
+
 ### [0.4.1](https://github.com/wxn0brp/FlankerUi/compare/v0.4.0...v0.4.1) (2025-10-02)
 
 
