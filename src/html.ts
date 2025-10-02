@@ -100,17 +100,15 @@ const proto = {
     },
 
     async fadeInP(this: HTMLElement, display: string = "block"): Promise<HTMLElement> {
-        new Promise<void>((resolve) => {
-            this.fadeIn(display, resolve);
+        return new Promise<HTMLElement>((resolve) => {
+            this.fadeIn(display, () => resolve(this));
         });
-        return this;
     },
 
     async fadeOutP(): Promise<HTMLElement> {
-        new Promise<void>((resolve) => {
-            this.fadeOut(resolve);
+        return new Promise<HTMLElement>((resolve) => {
+            this.fadeOut(() => resolve(this));
         });
-        return this;
     },
 
     fade: true,
