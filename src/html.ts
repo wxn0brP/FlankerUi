@@ -114,8 +114,13 @@ const proto = {
         }, args);
         const time = opts.time ?? 300;
         opts.time = time;
-        this.animateFade(1, opts);
-        setTimeout(() => this.css("display", "none"), time);
+        this.animateFade(1, {
+            ...opts,
+            cb: () => {
+                this.css("display", "none");
+                opts.cb?.();
+            }
+        });
         this.fade = false;
         return this;
     },
