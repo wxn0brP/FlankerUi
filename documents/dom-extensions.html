@@ -9,8 +9,9 @@
 <li><code>.on(event, handler)</code>: Add an event listener.</li>
 <li><code>.css(styles, value?)</code>: Set CSS styles.</li>
 <li><code>.clA(class)</code>, <code>.clR(class)</code>, <code>.clT(class)</code>: Add, remove, or toggle a CSS class.</li>
-<li><code>.qs(selector)</code>, <code>.qsi(selector)</code>: Query selectors for descendants.</li>
-<li><code>.qi(id)</code>, <code>.qii(id)</code>: Query selectors by data-id.</li>
+<li><code>.qs(id)</code>: Query selectors (HTMLDivElement).</li>
+<li><code>.qs(id, 1)</code>: Query selectors by data-id.</li>
+<li><code>.qi(id)</code>: Alias for qs but returns HTMLInputElement.</li>
 <li><code>.fadeIn()</code>, <code>.fadeOut()</code>, <code>.fadeToggle()</code>: Perform fade animations.</li>
 <li><code>.fadeInP()</code>, <code>.fadeOutP()</code>: Promise version.</li>
 <li><code>.add(child)</code>, <code>.addUp(child)</code>: Append or prepend a child element.</li>
