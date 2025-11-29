@@ -6,9 +6,9 @@
     "description": "Flanker UI library",
     "repository": {
         "type": "git",
-        "url": "https://github.com/wxn0brp/FlankerUi.git"
+        "url": "https://github.com/wxn0brP/FlankerUi.git"
     },
-    "homepage": "https://github.com/wxn0brp/FlankerUi",
+    "homepage": "https://github.com/wxn0brP/FlankerUi",
     "author": "wxn0brP",
     "license": "MIT",
     "type": "module",
