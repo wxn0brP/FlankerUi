@@ -156,12 +156,10 @@ const proto = {
     qs<T = HTMLDivElement>(this: HTMLElement, selector: string, did: any = 0): T {
         if (!!did) selector = `[data-id="${selector}"]`;
         return this.querySelector(selector) as T;
-    },
-
-    qi<T = HTMLInputElement>(this: HTMLElement, selector: string, did: any = 0): T {
-        return this.qs<T>(selector, did) as T;
-    },
+    }
 };
+// @ts-ignore
+proto.qi = proto.qs;
 
 function convert(
     opts: Record<string, string>,
@@ -187,10 +185,4 @@ Object.assign(HTMLElement.prototype, proto);
 Object.assign(document, proto);
 Object.assign(document.body, proto);
 Object.assign(document.documentElement, proto);
-for (const name of ["qs", "qi"]) {
-    if (typeof proto[name] === "function") {
-        window[name] = function (...args: any[]) {
-            return proto[name].apply(document, args);
-        };
-    }
-}
+window.qs = window.qi = proto.qs.bind(document);
