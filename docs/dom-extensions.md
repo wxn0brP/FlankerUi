@@ -28,8 +28,9 @@ Importing `'@wxn0brp/flanker-ui/html'` adds the following methods to `HTMLElemen
 - `.on(event, handler)`: Add an event listener.
 - `.css(styles, value?)`: Set CSS styles.
 - `.clA(class)`, `.clR(class)`, `.clT(class)`: Add, remove, or toggle a CSS class.
-- `.qs(selector)`, `.qsi(selector)`: Query selectors for descendants.
-- `.qi(id)`, `.qii(id)`: Query selectors by data-id.
+- `.qs(id)`: Query selectors (HTMLDivElement).
+- `.qs(id, 1)`: Query selectors by data-id.
+- `.qi(id)`: Alias for qs but returns HTMLInputElement.
 - `.fadeIn()`, `.fadeOut()`, `.fadeToggle()`: Perform fade animations.
 - `.fadeInP()`, `.fadeOutP()`: Promise version.
 - `.add(child)`, `.addUp(child)`: Append or prepend a child element.
