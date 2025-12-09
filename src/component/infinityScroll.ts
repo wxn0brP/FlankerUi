@@ -1,4 +1,4 @@
-import { mountView } from ".";
+import { MountView } from "./types";
 
 export interface InfiniteScrollOptions {
     threshold?: number;
@@ -6,39 +6,38 @@ export interface InfiniteScrollOptions {
 }
 
 export function enableInfiniteScroll(
-    component: ReturnType<typeof mountView>,
+    component: MountView,
     options: InfiniteScrollOptions = {}
 ): () => void {
     const {
         threshold = 200,
         pageSize = 10,
     } = options;
+    const cmp = component as MountView<{ hasMore: boolean; loading: boolean }>;
 
     let page = 0;
-    let loading = false;
-    let hasMore = true;
 
-    const el = component.element;
-    const loadFn = component.load;
+    const el = cmp.element;
+    const loadFn = cmp.load;
 
     async function handleScroll() {
-        if (loading || !hasMore) return;
+        if (cmp.loading || !cmp.hasMore) return;
         const { scrollTop, scrollHeight, clientHeight } = el;
         if (!(scrollHeight - scrollTop - clientHeight <= threshold)) return;
         await load();
     }
 
     async function load() {
-        loading = true;
+        cmp.loading = true;
 
         try {
             await loadFn({ offset: page * pageSize, limit: pageSize });
             page++;
         } catch (e) {
             console.error("[FlankerUi] Error during infinite scroll load", e);
-            hasMore = false;
+            cmp.hasMore = false;
         } finally {
-            loading = false;
+            cmp.loading = false;
         }
     }
 

@@ -1,6 +1,6 @@
-import { VQLUQ } from "@wxn0brp/vql-client/dist/vql";
-import { UiComponent } from "../types";
 import type { fetchVQL as fetchVQLType } from "@wxn0brp/vql-client";
+import type { VQLUQ } from "@wxn0brp/vql-client/vql";
+import type { MountView, MountViewComponent, TemplateDataMode, ViewOptions } from "./types";
 
 let _fetchVQL: typeof fetchVQLType;
 const fetchVQL = async (q: VQLUQ) => {
@@ -8,36 +8,10 @@ const fetchVQL = async (q: VQLUQ) => {
     return _fetchVQL(q);
 }
 
-export type QueryFunction<T = any> = (...any: any[]) => Promise<T>;
-export type TemplateDataMode = "append" | "prepend" | "replace";
-
-export interface ViewOptions<VQL = any> {
-    selector: string | HTMLElement;
-    query?: VQLUQ<VQL> | QueryFunction<VQLUQ<VQL>>;
-    queryFunction?: QueryFunction;
-    queryArgs?: { [key: string]: any };
-    transform?: (data: any) => any;
-    sort?: string | ((a: any, b: any) => number);
-    template: (item: any) => string;
-    emptyData?: string;
-    templateDataMode?: TemplateDataMode;
-    events?: {
-        [eventType: string]: {
-            [selector: string]: (el: HTMLElement, e: Event) => void;
-        };
-    };
-    onData?: (data: any) => void;
-    onDataTransform?: (data: any) => any;
-    onDataSort?: (data: any) => number;
-};
-
 export function mountView<Extra extends Record<string, any> = {}>(
     opts: ViewOptions,
     extra?: Extra
-): UiComponent & {
-    load(args?: { [key: string]: any }): Promise<void>;
-    render(data: any): void;
-} & Extra {
+): MountView<Extra> {
     const el = typeof opts.selector === "string" ? document.querySelector(opts.selector) as HTMLElement : opts.selector;
     if (!el) throw new Error(`mountView: selector '${opts.selector}' not found`);
 
@@ -148,19 +122,15 @@ export function mountView<Extra extends Record<string, any> = {}>(
         }
     }
 
-    const base: UiComponent & {
-        load: typeof load;
-        render: typeof render;
-    } = {
+    const base: MountViewComponent = {
         element: el,
         mount: () => { },
         load,
         render
     };
 
-    return Object.assign(base, extra ?? {}) as UiComponent & typeof base & Extra;
+    return Object.assign(base, extra ?? {}) as MountView<Extra>;
 }
 
-export type MountView = ReturnType<typeof mountView>;
 export * as uiHelpers from "./helpers";
 export * as infinityScroll from "./infinityScroll";
