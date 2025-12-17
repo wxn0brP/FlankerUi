@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.4.5](https://github.com/wxn0brP/FlankerUi/compare/v0.4.4...v0.4.5) (2025-12-17)
+
+
+### Features
+
+* improve mountView ([7283dad](https://github.com/wxn0brP/FlankerUi/commit/7283dadfc33c0619ebe082b6a29c4339100732d4))
+* require VQLClient on mountView (instance of @wxn0brp/vql-client import) ([e0a5517](https://github.com/wxn0brP/FlankerUi/commit/e0a5517ad2b063b13006e53be001780f776641bc))
+* setFetchVQL ([153d032](https://github.com/wxn0brP/FlankerUi/commit/153d032e999b2ea5a990fb74663c7f7cc2ec1bf4))
+
+
+### Bug Fixes
+
+* store.get() ([bde1df9](https://github.com/wxn0brP/FlankerUi/commit/bde1df9d3fbe8a533f889b6cf6a4e8c3e81a03da))
+
 ### [0.4.4](https://github.com/wxn0brP/FlankerUi/compare/v0.4.3...v0.4.4) (2025-11-29)
 
 
