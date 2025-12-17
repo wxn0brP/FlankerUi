@@ -2,6 +2,7 @@ import type { fetchVQL as fetchVQLType } from "@wxn0brp/vql-client";
 import type { MountView, MountViewComponent, TemplateDataMode, ViewOptions } from "./types";
 
 let fetchVQL: typeof fetchVQLType = (window as any)?.VQLClient?.fetchVQL;
+export function setFetchVQL(fn: typeof fetchVQLType) { fetchVQL = fn; }
 
 export function mountView<Extra extends Record<string, any> = {}>(
     opts: ViewOptions,
