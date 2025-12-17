@@ -56,7 +56,7 @@ export function createStore<T extends Schema>(schema: T, parent?: any): StoreTyp
         for (const key in store) {
             if (storeKeys.includes(key)) continue;
             if (store.hasOwnProperty(key)) {
-                obj[key] = store[key];
+                obj[key] = store[key].get();
             }
         }
         return obj;
