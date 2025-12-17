@@ -1,12 +1,7 @@
 import type { fetchVQL as fetchVQLType } from "@wxn0brp/vql-client";
-import type { VQLUQ } from "@wxn0brp/vql-client/vql";
 import type { MountView, MountViewComponent, TemplateDataMode, ViewOptions } from "./types";
 
-let _fetchVQL: typeof fetchVQLType;
-const fetchVQL = async (q: VQLUQ) => {
-    if (!_fetchVQL) _fetchVQL = (window as any)?.VQLClient?.fetchVQL || (await import("@wxn0brp/vql-client")).fetchVQL;
-    return _fetchVQL(q);
-}
+let fetchVQL: typeof fetchVQLType = (window as any)?.VQLClient?.fetchVQL;
 
 export function mountView<Extra extends Record<string, any> = {}>(
     opts: ViewOptions,
