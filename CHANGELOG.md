@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.4.6](https://github.com/wxn0brP/FlankerUi/compare/v0.4.5...v0.4.6) (2025-12-18)
+
+
+### Features
+
+* store.getPointer() ([df153cd](https://github.com/wxn0brP/FlankerUi/commit/df153cd312969ecd4361b2c0ef1f8877423e486c))
+
 ### [0.4.5](https://github.com/wxn0brP/FlankerUi/compare/v0.4.4...v0.4.5) (2025-12-17)
 
 
