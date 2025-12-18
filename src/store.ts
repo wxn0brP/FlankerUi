@@ -6,9 +6,11 @@ export type StoreType<T> = {
     [K in keyof T]: T[K] extends object
     ? T[K] extends Array<any>
     ? ReactiveCell<T[K]>
-    : (StoreType<T[K]> & ReactiveCell<T[K]>)
+    : StoreType<T[K]> & ReactiveCell<T[K]>
     : ReactiveCell<T[K]>;
-} & ReactiveCell<T>;
+} & ReactiveCell<T> & {
+    getPointer(): StoreType<T>;
+};
 
 export interface ReactiveCell<T> {
     isStore: boolean;
@@ -57,6 +59,17 @@ export function createStore<T extends Schema>(schema: T, parent?: any): StoreTyp
             if (storeKeys.includes(key)) continue;
             if (store.hasOwnProperty(key)) {
                 obj[key] = store[key].get();
+            }
+        }
+        return obj;
+    }
+
+    store.getPointer = () => {
+        const obj: any = {};
+        for (const key in store) {
+            if (storeKeys.includes(key)) continue;
+            if (store.hasOwnProperty(key)) {
+                obj[key] = store[key];
             }
         }
         return obj;
