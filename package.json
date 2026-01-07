@@ -13,7 +13,7 @@
     "license": "MIT",
     "type": "module",
     "scripts": {
-        "build": "tsc && tsc-alias && node build.js"
+        "build": "tsc && tsc-alias"
     },
     "devDependencies": {
         "@wxn0brp/vql-client": "^0.2.7",

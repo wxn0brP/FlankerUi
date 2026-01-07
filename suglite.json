@@ -1,5 +1,5 @@
 {
-    "cmd": "tsc && tsc-alias && bun run build.js",
+    "cmd": "tsc && tsc-alias",
     "watch": [
         "src"
     ],
