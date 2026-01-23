@@ -13,7 +13,7 @@ export function bindHandlers(root: HTMLElement, map: Record<string, () => void>,
     }
 }
 
-export function renderList<T=any>(
+export function renderList<T = any>(
     container: HTMLElement,
     items: T[],
     renderItem: (item: T, index: number) => string,
@@ -26,7 +26,7 @@ export function renderList<T=any>(
     container.innerHTML = items.map(renderItem).join("");
 }
 
-export function renderListNodes<T=any>(
+export function renderListNodes<T = any>(
     container: HTMLElement,
     items: T[],
     renderItem: (item: T, index: number) => HTMLElement,
@@ -43,7 +43,8 @@ export function renderListNodes<T=any>(
 }
 
 export function watchInput(el: HTMLInputElement, store: ReactiveCell<string>, setFromElement = false) {
-    if(setFromElement) store.set(el.value);
+    if (setFromElement) store.set(el.value);
+    else el.value = store.get();
     el.addEventListener("input", () => {
         store.set(el.value);
     });
@@ -53,7 +54,8 @@ export function watchInput(el: HTMLInputElement, store: ReactiveCell<string>, se
 }
 
 export function watchSelect(el: HTMLSelectElement, store: ReactiveCell<string>, setFromElement = false) {
-    if(setFromElement) store.set(el.value);
+    if (setFromElement) store.set(el.value);
+    else el.value = store.get();
     el.addEventListener("change", () => {
         store.set(el.value);
     });
@@ -63,7 +65,8 @@ export function watchSelect(el: HTMLSelectElement, store: ReactiveCell<string>, 
 }
 
 export function watchCheckbox(el: HTMLInputElement, store: ReactiveCell<boolean>, setFromElement = false) {
-    if(setFromElement) store.set(el.checked);
+    if (setFromElement) store.set(el.checked);
+    else el.checked = store.get();
     el.addEventListener("change", () => {
         store.set(el.checked);
     });
@@ -72,7 +75,7 @@ export function watchCheckbox(el: HTMLInputElement, store: ReactiveCell<boolean>
     });
 }
 
-export function htmlToElement<T=HTMLElement>(html: string): T {
+export function htmlToElement<T = HTMLElement>(html: string): T {
     const template = document.createElement("template");
     template.innerHTML = html.trim();
     return template.content.firstElementChild as T;

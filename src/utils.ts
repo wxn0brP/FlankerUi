@@ -11,7 +11,7 @@ export function clamp(min: number, value: number, max: number): number {
     return Math.min(Math.max(value, min), max);
 }
 
-export function get(url: string): string{
+export function get(url: string): string {
     if (!url) return "";
     const xhr = new XMLHttpRequest();
     xhr.open("GET", url, false);
@@ -26,11 +26,11 @@ export function get(url: string): string{
     }
 }
 
-export function getJSON<T=any>(url: string): T {
+export function getJSON<T = any>(url: string): T {
     return JSON.parse(get(url));
 }
 
-export function debounce<T=Function>(func: Function, wait: number = 100): T {
+export function debounce<T = Function>(func: Function, wait: number = 100): T {
     let timeout: any;
     return function executedFunction(...args: any[]) {
         const later = () => {
@@ -42,7 +42,7 @@ export function debounce<T=Function>(func: Function, wait: number = 100): T {
     } as T;
 }
 
-export function throttle<T=Function>(func: Function, wait: number = 100): T {
+export function throttle<T = Function>(func: Function, wait: number = 100): T {
     let inThrottle: boolean;
     return function executedFunction(...args: any[]) {
         if (!inThrottle) {

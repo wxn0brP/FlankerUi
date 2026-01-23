@@ -22,10 +22,21 @@ export interface ReactiveCell<T> {
     listeners: Array<(value: T) => void>;
 }
 
-export const storeKeys = ["listeners", "value", "notify", "get", "set", "subscribe", "parent", "isStore"];
+export const storeKeys = [
+    "listeners",
+    "value",
+    "notify",
+    "get",
+    "getPointer",
+    "set",
+    "subscribe",
+    "parent",
+    "isStore",
+];
 
 export function createStore<T extends Schema>(schema: T, parent?: any): StoreType<T> {
     const store: any = {};
+
     for (const key in schema) {
         if (schema.hasOwnProperty(key)) {
             const isStore =
@@ -40,6 +51,7 @@ export function createStore<T extends Schema>(schema: T, parent?: any): StoreTyp
             }
         }
     }
+
     store.isStore = true;
     store.listeners = [];
     store.value = undefined;
