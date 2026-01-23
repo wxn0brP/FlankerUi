@@ -34,7 +34,7 @@ export function reactFromAttr(attrVal: string, el: HTMLElement, params: Reactive
             : (v: any) => v;
 
         const result = computeValue(val);
-        const type = _type || "style";
+        const type = _type || "innerHTML";
         switch (type) {
             case "attr":
                 if (result === false) el.removeAttribute(attrName);
