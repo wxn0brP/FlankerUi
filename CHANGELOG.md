@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.5.0](https://github.com/wxn0brP/FlankerUi/compare/v0.4.7...v0.5.0) (2026-01-23)
+
+
+### Features
+
+* small fixes & format code ([c21fdbb](https://github.com/wxn0brP/FlankerUi/commit/c21fdbb4c8536c1592cd376b0bb4e6ba13415def))
+
+
+### Bug Fixes
+
+* mountView raw args ([2d5ff16](https://github.com/wxn0brP/FlankerUi/commit/2d5ff1619c47d325e5b54c8e2e0af3be01318a32))
+
 ### [0.4.7](https://github.com/wxn0brP/FlankerUi/compare/v0.4.6...v0.4.7) (2026-01-07)
 
 
