@@ -1,14 +1,15 @@
 import type { VQLUQ } from "@wxn0brp/vql-client/vql";
 import { UiComponent } from "../types";
 
-export type QueryFunction<T = any> = (...any: any[]) => Promise<T>;
+export type QueryFunction<T = any> = (assignArgs: Record<string, any> & RenderArgs, args: RenderArgs) => Promise<T>;
 export type TemplateDataMode = "append" | "prepend" | "replace";
+export type RenderArgs = Record<string, any> | any[];
 
 export interface ViewOptions<VQL = any> {
     selector: string | HTMLElement;
     query?: VQLUQ<VQL> | QueryFunction<VQLUQ<VQL>>;
     queryFunction?: QueryFunction;
-    queryArgs?: { [key: string]: any };
+    queryArgs?: Record<string, any>;
     transform?: (data: any) => any;
     sort?: string | ((a: any, b: any) => number);
     template: (item: any) => string;

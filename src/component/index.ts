@@ -1,5 +1,5 @@
 import type { fetchVQL as fetchVQLType } from "@wxn0brp/vql-client";
-import type { MountView, MountViewComponent, TemplateDataMode, ViewOptions } from "./types";
+import type { MountView, MountViewComponent, RenderArgs, TemplateDataMode, ViewOptions } from "./types";
 
 let fetchVQL: typeof fetchVQLType = (window as any)?.VQLClient?.fetchVQL;
 export function setFetchVQL(fn: typeof fetchVQLType) { fetchVQL = fn; }
@@ -11,24 +11,24 @@ export function mountView<Extra extends Record<string, any> = {}>(
     const el = typeof opts.selector === "string" ? document.querySelector(opts.selector) as HTMLElement : opts.selector;
     if (!el) throw new Error(`mountView: selector '${opts.selector}' not found`);
 
-    async function load(args: { [key: string]: any } = {}) {
-        let data: any;
+    async function load(args: RenderArgs = {}) {
+        let data: RenderArgs;
         const assignArgs = Object.assign({}, opts.queryArgs, args);
 
         if (opts.queryFunction)
-            data = await opts.queryFunction(assignArgs);
+            data = await opts.queryFunction(assignArgs, args);
 
         else if (typeof opts.query === "string")
             data = await fetchVQL({ query: opts.query, var: args });
 
         else if (typeof opts.query === "function")
-            data = await fetchVQL(await opts.query(assignArgs));
+            data = await fetchVQL(await opts.query(assignArgs, args));
 
         else if (typeof opts.query === "object" && !Array.isArray(opts.query))
             data = await fetchVQL(opts.query);
 
         else
-            data = assignArgs;
+            data = args;
 
         if (opts.onData) opts.onData(data);
         if (opts.transform) data = opts.transform(data);
@@ -68,7 +68,7 @@ export function mountView<Extra extends Record<string, any> = {}>(
         }
     }
 
-    function render(data: any, mode: TemplateDataMode = "replace") {
+    function render(data: RenderArgs, mode: TemplateDataMode = "replace") {
         let res: string = "";
         let empty = false;
 
