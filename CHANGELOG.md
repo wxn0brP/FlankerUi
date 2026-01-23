@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.5.1](https://github.com/wxn0brP/FlankerUi/compare/v0.5.0...v0.5.1) (2026-01-23)
+
+
+### Bug Fixes
+
+* reactive ([0494113](https://github.com/wxn0brP/FlankerUi/commit/04941138cbe6e4b8e21709978571e98f22ffebc7))
+
 ## [0.5.0](https://github.com/wxn0brP/FlankerUi/compare/v0.4.7...v0.5.0) (2026-01-23)
 
 
