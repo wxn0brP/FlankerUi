@@ -19,7 +19,7 @@
         "@wxn0brp/vql-client": "^0.2.7",
         "esbuild": "*",
         "tsc-alias": "*",
-        "typescript": "*"
+        "typescript": "^5"
     },
     "peerDependencies": {
         "@wxn0brp/vql-client": ">=0.2.7"
