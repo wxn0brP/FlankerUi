@@ -1,0 +1,7 @@
+{
+    cmd: "tsc --noEmit",
+    watch: [
+        "src",
+    ],
+    server: 15665,
+}
