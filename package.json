@@ -16,13 +16,13 @@
         "build": "tsc && tsc-alias"
     },
     "devDependencies": {
-        "@wxn0brp/vql-client": "^0.2.7",
+        "@wxn0brp/vql-client": "^0.2.9",
         "esbuild": "*",
-        "tsc-alias": "*",
-        "typescript": "^5"
+        "tsc-alias": "^1",
+        "typescript": "^6"
     },
     "peerDependencies": {
-        "@wxn0brp/vql-client": ">=0.2.7"
+        "@wxn0brp/vql-client": "^0.2.9"
     },
     "peerDependenciesMeta": {
         "@wxn0brp/vql-client": {
