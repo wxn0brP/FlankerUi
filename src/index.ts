@@ -1,9 +1,9 @@
+export * from "./component";
+export * as reactStore from "./reactive";
 export * from "./store";
+export * as storeUtils from "./storeUtils";
 export * from "./types";
 import * as utils from "./utils";
-export * from "./component";
-export * as storeUtils from "./storeUtils";
-export * as reactStore from "./reactive";
 
 globalThis.lo = console.log;
 
