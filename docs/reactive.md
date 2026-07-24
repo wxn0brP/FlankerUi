@@ -7,20 +7,22 @@ The reactive system in Flanker UI allows you to bind HTML element properties to 
 To use reactive HTML binding, initialize it with your store:
 
 ```typescript
-import { initReactiveHTML } from '@wxn0brp/flanker-ui/reactive';
-import { createStore } from '@wxn0brp/flanker-ui';
+import { initReactiveHTML } from "@wxn0brp/flanker-ui/reactive";
+import { createStore } from "@wxn0brp/flanker-ui";
 
 const store = createStore({
   user: {
-    name: 'John',
+    name: "John",
     isActive: true
   },
-  theme: 'dark',
+  theme: "dark",
   counter: 0
 });
 
 initReactiveHTML(store);
 ```
+
+`initReactiveHTML` subscribes to the whole store and applies the current cell values immediately, then updates matching elements whenever cells change.
 
 ## Basic Syntax
 
@@ -38,14 +40,15 @@ For `textContent` and `innerHTML`, the `attrName` part is ignored but still requ
 <div data-r="user.name:textContent"></div>
 ```
 
-The available types are:
+The available binding types are:
+
 - `attr` - for HTML attributes
 - `style` - for CSS styles
 - `class` - for CSS classes
 - `textContent` - for text content
 - `innerHTML` - for HTML content
 
-When no type is specified, it defaults to `style`. However, for explicit clarity, it's recommended to always specify the type:
+When no type is specified, it defaults to `innerHTML`. For clarity, prefer specifying the type:
 
 ```html
 <!-- This binds to the backgroundColor style property -->
@@ -112,6 +115,8 @@ Separate multiple bindings with commas:
 </div>
 ```
 
+The implementation scans `data-r`, `data-r-0`, and `data-r-1`.
+
 ## Base Keys
 
 Use `data-base-key` to simplify paths:
@@ -131,3 +136,5 @@ Expressions are JavaScript code that receive the store value as `v` (JS Statemen
 - `!` - Inverts a boolean value
 - `v === 'value'` - Compare with a string
 - `v > 10 ? 'high' : 'low'` - Conditional values
+
+See `examples/reactive-html-profile.html` for a complete browser example.
