@@ -16,6 +16,7 @@
         "build": "tsc && tsc-alias"
     },
     "devDependencies": {
+        "@wxn0brp/biome": "*",
         "@wxn0brp/vql-client": "^0.2.9",
         "esbuild": "*",
         "tsc-alias": "^1",
