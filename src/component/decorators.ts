@@ -1,5 +1,11 @@
 import type { ReactiveCell } from "../store";
 
+type Metadata = Record<string | symbol, any>;
+
+function readMeta(ctx: { metadata?: Metadata }): Metadata {
+	return ctx.metadata ?? {};
+}
+
 export interface PropOptions {
 	attribute?: boolean | string;
 	type?: Function;
@@ -15,93 +21,76 @@ export interface EventOptions {
 	selector?: string;
 }
 
-export function prop(_target: any, name: string) {
-	const Ctor = _target.constructor as any;
-	if (!Object.hasOwn(Ctor, "_declaredProps")) {
-		Ctor._declaredProps = new Map(Ctor._declaredProps ?? []);
-	}
-	Ctor._declaredProps.set(name, {});
+export function prop(_target: any, context: ClassAccessorDecoratorContext) {
+	const m = readMeta(context);
+	if (!m._declaredProps) m._declaredProps = new Map();
+	(m._declaredProps as Map<string, any>).set(context.name as string, {});
 }
 
 export function query(selector: string) {
-	return (proto: any, name: string) => {
-		const Ctor = proto.constructor as any;
-		if (!Object.hasOwn(Ctor, "_declaredQueries")) {
-			Ctor._declaredQueries = new Map(Ctor._declaredQueries ?? []);
-		}
-		Ctor._declaredQueries.set(name, {
+	return (_target: any, context: ClassAccessorDecoratorContext) => {
+		const name = context.name as string;
+		const m = readMeta(context);
+		if (!m._declaredQueries) m._declaredQueries = new Map();
+		(m._declaredQueries as Map<string, QueryOptions>).set(name, {
 			selector,
 			type: "querySelector",
-		} as QueryOptions);
-
-		Object.defineProperty(proto, name, {
-			get(this: any) {
-				return this.element?.querySelector(selector) ?? null;
-			},
-			configurable: true,
 		});
-	};
-}
 
-export function qi(selector: string) {
-	return (proto: any, name: string) => {
-		const Ctor = proto.constructor as any;
-		if (!Object.hasOwn(Ctor, "_declaredQueries")) {
-			Ctor._declaredQueries = new Map(Ctor._declaredQueries ?? []);
-		}
-		Ctor._declaredQueries.set(name, {
-			selector,
-			type: "querySelector",
-		} as QueryOptions);
-
-		Object.defineProperty(proto, name, {
-			get(this: any) {
-				return this.element?.querySelector(selector) ?? null;
-			},
-			configurable: true,
+		context.addInitializer(function (this: any) {
+			Object.defineProperty(this, name, {
+				get() {
+					return this.element?.querySelector(selector) ?? null;
+				},
+				configurable: true,
+			});
 		});
 	};
 }
 
 export function queryAll(selector: string) {
-	return (proto: any, name: string) => {
-		const Ctor = proto.constructor as any;
-		if (!Object.hasOwn(Ctor, "_declaredQueries")) {
-			Ctor._declaredQueries = new Map(Ctor._declaredQueries ?? []);
-		}
-		Ctor._declaredQueries.set(name, {
+	return (_target: any, context: ClassAccessorDecoratorContext) => {
+		const name = context.name as string;
+		const m = readMeta(context);
+		if (!m._declaredQueries) m._declaredQueries = new Map();
+		(m._declaredQueries as Map<string, QueryOptions>).set(name, {
 			selector,
 			type: "querySelectorAll",
-		} as QueryOptions);
+		});
 
-		Object.defineProperty(proto, name, {
-			get(this: any) {
-				return this.element?.querySelectorAll(selector) ?? null;
-			},
-			configurable: true,
+		context.addInitializer(function (this: any) {
+			Object.defineProperty(this, name, {
+				get() {
+					return this.element?.querySelectorAll(selector) ?? null;
+				},
+				configurable: true,
+			});
 		});
 	};
 }
 
 export function hide(storeCell: ReactiveCell<boolean>) {
-	return (Ctor: any) => {
-		if (!Object.hasOwn(Ctor, "_declaredHides")) {
-			Ctor._declaredHides = new Map(Ctor._declaredHides ?? []);
-		}
-		Ctor._declaredHides.set("hide", storeCell);
-		return Ctor;
+	return (target: Function, context: ClassDecoratorContext) => {
+		const m = readMeta(context);
+		if (!m._declaredHides) m._declaredHides = new Map();
+		(m._declaredHides as Map<string, ReactiveCell<boolean>>).set(
+			"hide",
+			storeCell,
+		);
+		return target;
 	};
 }
 
-export function on(event: string, selector?: string) {
-	return (proto: any, name: string) => {
-		const Ctor = proto.constructor as any;
-		if (!Object.hasOwn(Ctor, "_declaredEvents")) {
-			Ctor._declaredEvents = new Map(Ctor._declaredEvents ?? []);
-		}
-		Ctor._declaredEvents.set(name, {
-			event,
-			selector,
-		} as EventOptions);
+export function listen(event: string, selector: string) {
+	return (_target: any, context: ClassMethodDecoratorContext) => {
+		const m = readMeta(context);
+		if (!m._declaredEvents) m._declaredEvents = new Map();
+		(m._declaredEvents as Map<string, EventOptions>).set(
+			context.name as string,
+			{
+				event,
+				selector,
+			},
+		);
 	};
 }

@@ -1,6 +1,12 @@
 import { ReactiveCell } from "../store";
 import type { UiComponent } from "../types";
 
+const METADATA_KEY = (Symbol as any).metadata ?? Symbol.for("Symbol.metadata");
+
+function getMeta(ctor: any): any {
+	return ctor?.[METADATA_KEY] ?? {};
+}
+
 export class UiView implements UiComponent {
 	element!: HTMLElement;
 	root?: string | HTMLElement;
@@ -10,8 +16,8 @@ export class UiView implements UiComponent {
 	_mounted = false;
 
 	constructor() {
-		const Ctor = this.constructor as any;
-		const props: Map<string, any> = Ctor._declaredProps ?? new Map();
+		const meta = getMeta(this.constructor as any);
+		const props: Map<string, any> = meta._declaredProps ?? new Map();
 
 		for (const [name] of props) {
 			const cell = new ReactiveCell(undefined);
@@ -42,9 +48,9 @@ export class UiView implements UiComponent {
 					: this.root;
 		}
 
-		const Ctor = this.constructor as any;
+		const meta = getMeta(this.constructor as any);
 
-		const hides: Map<string, ReactiveCell<boolean>> = Ctor._declaredHides ??
+		const hides: Map<string, ReactiveCell<boolean>> = meta._declaredHides ??
 		new Map();
 		for (const [, storeCell] of hides) {
 			storeCell.subscribe((visible: boolean) => {
@@ -60,7 +66,7 @@ export class UiView implements UiComponent {
 				event: string;
 				selector?: string;
 			}
-		> = Ctor._declaredEvents ?? new Map();
+		> = meta._declaredEvents ?? new Map();
 		for (const [methodName, { event, selector }] of events) {
 			const handler = (this as any)[methodName].bind(this);
 			if (this.element) {

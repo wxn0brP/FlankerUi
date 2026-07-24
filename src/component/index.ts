@@ -147,3 +147,5 @@ export function mountView<Extra extends Record<string, any> = {}>(
 
 export * as uiHelpers from "./helpers";
 export * as infinityScroll from "./infinityScroll";
+export * from "./view";
+export * from "./decorators";
