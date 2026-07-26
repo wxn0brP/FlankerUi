@@ -1,5 +1,7 @@
 import { ReactiveCell } from "../store";
 import type { UiComponent } from "../types";
+import { watchCheckbox, watchInput, watchNumber } from "./helpers";
+import type { BindOptions } from "./decorators";
 
 const METADATA_KEY = (Symbol as any).metadata ?? Symbol.for("Symbol.metadata");
 
@@ -14,28 +16,6 @@ export class UiView implements UiComponent {
 	_store: Map<string, ReactiveCell<any>> = new Map();
 	_updateScheduled = false;
 	_mounted = false;
-
-	constructor() {
-		const meta = getMeta(this.constructor as any);
-		const props: Map<string, any> = meta._declaredProps ?? new Map();
-
-		for (const [name] of props) {
-			const cell = new ReactiveCell(undefined);
-			this._store.set(name, cell);
-
-			Object.defineProperty(this, name, {
-				get: () => cell.get(),
-				set: (v: any) => {
-					if (cell.get() !== v) {
-						cell.set(v);
-						this.requestUpdate();
-					}
-				},
-				configurable: true,
-				enumerable: true,
-			});
-		}
-	}
 
 	mount() {
 		if (this._mounted) return;
@@ -79,6 +59,55 @@ export class UiView implements UiComponent {
 					});
 				} else {
 					this.element.addEventListener(event, handler);
+				}
+			}
+		}
+
+		const binds: BindOptions[] = meta._declaredBinds ?? [];
+		for (const { propName, selector, type } of binds) {
+			const el = this.element.querySelector(selector) as HTMLElement;
+			if (!el) continue;
+			const cell = this._store.get(propName);
+			if (!cell) continue;
+
+			switch (type) {
+				case "value": {
+					watchInput(
+						el as HTMLInputElement,
+						cell as ReactiveCell<string>,
+						false,
+					);
+					break;
+				}
+				case "number": {
+					watchNumber(
+						el as HTMLInputElement,
+						cell as ReactiveCell<number>,
+						false,
+					);
+					break;
+				}
+				case "checked": {
+					watchCheckbox(
+						el as HTMLInputElement,
+						cell as ReactiveCell<boolean>,
+						false,
+					);
+					break;
+				}
+				case "text": {
+					el.textContent = cell.get() ?? "";
+					cell.subscribe(v => {
+						el.textContent = v ?? "";
+					});
+					break;
+				}
+				case "html": {
+					el.innerHTML = cell.get() ?? "";
+					cell.subscribe(v => {
+						el.innerHTML = v ?? "";
+					});
+					break;
 				}
 			}
 		}

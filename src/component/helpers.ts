@@ -96,6 +96,21 @@ export function watchCheckbox(
 	});
 }
 
+export function watchNumber(
+	el: HTMLInputElement,
+	store: ReactiveCell<number>,
+	setFromElement = false,
+) {
+	if (setFromElement) store.set(el.valueAsNumber);
+	else el.valueAsNumber = store.get();
+	el.addEventListener("input", () => {
+		store.set(el.valueAsNumber);
+	});
+	store.subscribe(value => {
+		if (el.valueAsNumber !== value) el.valueAsNumber = value;
+	});
+}
+
 export function htmlToElement<T = HTMLElement>(html: string): T {
 	const template = document.createElement("template");
 	template.innerHTML = html.trim();
