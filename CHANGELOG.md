@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.5.2-alpha.2](https://github.com/wxn0brP/FlankerUi/compare/v0.5.2-alpha.1...v0.5.2-alpha.2) (2026-07-26)
+
+
+### Features
+
+* rebuild decorators & reactive html ([0ae275c](https://github.com/wxn0brP/FlankerUi/commit/0ae275cce8e30aba938d482fe81db4bf9e250db8))
+
 ### [0.5.2-alpha.1](https://github.com/wxn0brP/FlankerUi/compare/v0.5.2-alpha.0...v0.5.2-alpha.1) (2026-07-24)
 
 
