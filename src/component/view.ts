@@ -30,12 +30,48 @@ export class UiView implements UiComponent {
 
 		const meta = getMeta(this.constructor as any);
 
-		const hides: Map<string, ReactiveCell<boolean>> = meta._declaredHides ??
-		new Map();
-		for (const [, storeCell] of hides) {
-			storeCell.subscribe((visible: boolean) => {
-				if (this.element) {
-					this.element.style.display = visible ? "" : "none";
+		const hides: Map<
+			string | null,
+			{ cell: ReactiveCell<boolean>; negate: boolean }
+		> = meta._declaredHides ?? new Map();
+		for (const [key, { cell, negate }] of hides) {
+			const el =
+				key === null ? this.element : (this as any)[key as string];
+			if (!el) continue;
+			cell.subscribe((visible: boolean) => {
+				const show = negate ? !visible : visible;
+				el.style.display = show ? "" : "none";
+			});
+		}
+
+		const classes: Map<
+			string | null,
+			{ className: string; cell: ReactiveCell<boolean>; negate: boolean }
+		> = meta._declaredClasses ?? new Map();
+		for (const [key, { className, cell, negate }] of classes) {
+			const el =
+				key === null ? this.element : (this as any)[key as string];
+			if (!el) continue;
+			cell.subscribe((val: boolean) => {
+				const add = negate ? !val : val;
+				el.classList.toggle(className, add);
+			});
+		}
+
+		const attrs: Map<
+			string | null,
+			{ attrName: string; cell: ReactiveCell<any>; negate: boolean }
+		> = meta._declaredAttrs ?? new Map();
+		for (const [key, { attrName, cell, negate }] of attrs) {
+			const el =
+				key === null ? this.element : (this as any)[key as string];
+			if (!el) continue;
+			cell.subscribe((val: any) => {
+				const shouldSet = negate ? !val : val;
+				if (shouldSet === null || shouldSet === undefined || shouldSet === false) {
+					el.removeAttribute(attrName);
+				} else {
+					el.setAttribute(attrName, String(shouldSet));
 				}
 			});
 		}
@@ -75,7 +111,7 @@ export class UiView implements UiComponent {
 					watchInput(
 						el as HTMLInputElement,
 						cell as ReactiveCell<string>,
-						false,
+						true,
 					);
 					break;
 				}
@@ -83,7 +119,7 @@ export class UiView implements UiComponent {
 					watchNumber(
 						el as HTMLInputElement,
 						cell as ReactiveCell<number>,
-						false,
+						true,
 					);
 					break;
 				}
@@ -91,7 +127,7 @@ export class UiView implements UiComponent {
 					watchCheckbox(
 						el as HTMLInputElement,
 						cell as ReactiveCell<boolean>,
-						false,
+						true,
 					);
 					break;
 				}

@@ -97,9 +97,11 @@ export function initReactiveHTML<T extends StoreType<{}>>(
 		const elBaseKey = el.getAttribute("data-base-key") || "";
 
 		const reactiveAttrs: string[] = [];
-		for (const a of REACTIVE_ATTRS) {
-			const val = el.getAttribute(a);
-			if (val) reactiveAttrs.push(val.trim());
+		for (const attr of el.getAttributeNames()) {
+			if (attr === "data-r" || /^data-r-\d+$/.test(attr)) {
+				const val = el.getAttribute(attr);
+				if (val) reactiveAttrs.push(val.trim());
+			}
 		}
 
 		reactiveAttrs.forEach(attrVal => {

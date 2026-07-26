@@ -61,15 +61,56 @@ export function bind(selector: string, type: BindType = "value") {
 	};
 }
 
-export function hide(storeCell: ReactiveCell<boolean>) {
-	return (target: Function, context: ClassDecoratorContext) => {
+export function hide(storeCell: ReactiveCell<boolean>, negate = false) {
+	return (target: any, context: any) => {
 		const m = readMeta(context);
 		if (!m._declaredHides) m._declaredHides = new Map();
-		(m._declaredHides as Map<string, ReactiveCell<boolean>>).set(
-			"hide",
-			storeCell,
-		);
-		return target;
+		const key = context.kind === "class" ? null : (context.name as string);
+		(
+			m._declaredHides as Map<
+				string | null,
+				{ cell: ReactiveCell<boolean>; negate: boolean }
+			>
+		).set(key, { cell: storeCell, negate });
+		if (context.kind === "class") return target;
+	};
+}
+
+export function classToggle(
+	className: string,
+	cell: ReactiveCell<boolean>,
+	negate = false,
+) {
+	return (target: any, context: any) => {
+		const m = readMeta(context);
+		if (!m._declaredClasses) m._declaredClasses = new Map();
+		const key = context.kind === "class" ? null : (context.name as string);
+		(
+			m._declaredClasses as Map<
+				string | null,
+				{ className: string; cell: ReactiveCell<boolean>; negate: boolean }
+			>
+		).set(key, { className, cell, negate });
+		if (context.kind === "class") return target;
+	};
+}
+
+export function attr(
+	attrName: string,
+	cell: ReactiveCell<any>,
+	negate = false,
+) {
+	return (target: any, context: any) => {
+		const m = readMeta(context);
+		if (!m._declaredAttrs) m._declaredAttrs = new Map();
+		const key = context.kind === "class" ? null : (context.name as string);
+		(
+			m._declaredAttrs as Map<
+				string | null,
+				{ attrName: string; cell: ReactiveCell<any>; negate: boolean }
+			>
+		).set(key, { attrName, cell, negate });
+		if (context.kind === "class") return target;
 	};
 }
 
@@ -141,5 +182,3 @@ export function on(event: string, selector?: string) {
 		});
 	};
 }
-
-export const listen = on;
