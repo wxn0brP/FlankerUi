@@ -16,7 +16,7 @@ export function bindHandlers(
 ) {
 	for (const [selector, handler] of Object.entries(map)) {
 		const el = root.querySelector(selector);
-		if (el) el.addEventListener(event, handler);
+		el.addEventListener(event, handler);
 	}
 }
 
