@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.5.3](https://github.com/wxn0brP/FlankerUi/compare/v0.5.2...v0.5.3) (2026-09-27)
+
+
+### Features
+
+* sse ([76c4981](https://github.com/wxn0brP/FlankerUi/commit/76c4981d1e40cee98f02a2b94c1e7a8d8bc6d1ed))
+
+
+### Bug Fixes
+
+* bindHandlers silent error ([4528fc4](https://github.com/wxn0brP/FlankerUi/commit/4528fc47d38088cded55cc76214e1edc7ed45e8b))
+
 ### [0.5.2](https://github.com/wxn0brP/FlankerUi/compare/v0.5.2-alpha.2...v0.5.2) (2026-07-26)
 
 
