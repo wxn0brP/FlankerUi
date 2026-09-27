@@ -17,15 +17,20 @@
     },
     "devDependencies": {
         "@wxn0brp/biome": "*",
+        "@wxn0brp/event-emitter": "^0.0.7",
         "@wxn0brp/vql-client": "^0.2.9",
         "esbuild": "*",
         "tsc-alias": "^1",
         "typescript": "^6"
     },
     "peerDependencies": {
+        "@wxn0brp/event-emitter": "^0.0.7",
         "@wxn0brp/vql-client": "^0.2.9"
     },
     "peerDependenciesMeta": {
+        "@wxn0brp/event-emitter": {
+            "optional": true
+        },
         "@wxn0brp/vql-client": {
             "optional": true
         }
