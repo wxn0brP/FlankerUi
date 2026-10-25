@@ -11,7 +11,14 @@ export interface PropOptions {
 	type?: Function;
 }
 
-export type BindType = "value" | "number" | "checked" | "text" | "html";
+export type BindType =
+	| "value"
+	| "number"
+	| "range"
+	| "radio"
+	| "checked"
+	| "text"
+	| "html";
 
 export interface BindOptions {
 	propName: string;
@@ -69,9 +76,15 @@ export function hide(storeCell: ReactiveCell<boolean>, negate = false) {
 		(
 			m._declaredHides as Map<
 				string | null,
-				{ cell: ReactiveCell<boolean>; negate: boolean }
+				{
+					cell: ReactiveCell<boolean>;
+					negate: boolean;
+				}
 			>
-		).set(key, { cell: storeCell, negate });
+		).set(key, {
+			cell: storeCell,
+			negate,
+		});
 		if (context.kind === "class") return target;
 	};
 }
@@ -88,9 +101,17 @@ export function classToggle(
 		(
 			m._declaredClasses as Map<
 				string | null,
-				{ className: string; cell: ReactiveCell<boolean>; negate: boolean }
+				{
+					className: string;
+					cell: ReactiveCell<boolean>;
+					negate: boolean;
+				}
 			>
-		).set(key, { className, cell, negate });
+		).set(key, {
+			className,
+			cell,
+			negate,
+		});
 		if (context.kind === "class") return target;
 	};
 }
@@ -107,9 +128,17 @@ export function attr(
 		(
 			m._declaredAttrs as Map<
 				string | null,
-				{ attrName: string; cell: ReactiveCell<any>; negate: boolean }
+				{
+					attrName: string;
+					cell: ReactiveCell<any>;
+					negate: boolean;
+				}
 			>
-		).set(key, { attrName, cell, negate });
+		).set(key, {
+			attrName,
+			cell,
+			negate,
+		});
 		if (context.kind === "class") return target;
 	};
 }

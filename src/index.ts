@@ -1,4 +1,5 @@
 export * from "./component";
+export * from "./persist";
 export * as reactStore from "./reactive";
 export * from "./store";
 export * as storeUtils from "./storeUtils";

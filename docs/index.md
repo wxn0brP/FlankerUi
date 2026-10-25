@@ -2,11 +2,14 @@
 
 ## Modules
 
-- [State Management](state-management.md) - State management with createStore
+- [State Management](state-management.md) - `createStore`, cells, and persistence
+- [UiView and Decorators](ui-view.md) - class components and decorator bindings
+- [Mount View](mount-view.md) - data driven rendering with `mountView`
+- [Forms and Helpers](forms.md) - form bindings and list helpers
 - [DOM Extensions](dom-extensions.md) - DOM manipulation extensions
-- [Mount View](mount-view.md) - Component-based rendering system
 - [Reactive HTML Binding](reactive.md) - Declarative HTML attribute binding to store values
-- [Standalone Modules](standalone-modules.md) - Independent utilities like me()
+- [Utilities](utils.md) - number, string, HTTP, and timing helpers
+- [Standalone Modules](standalone-modules.md) - Independent utilities like `me()`
 
 ## API Reference
 

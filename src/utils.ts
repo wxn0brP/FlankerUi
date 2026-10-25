@@ -11,23 +11,26 @@ export function clamp(min: number, value: number, max: number): number {
 	return Math.min(Math.max(value, min), max);
 }
 
-export function get(url: string): string {
-	if (!url) return "";
-	const xhr = new XMLHttpRequest();
-	xhr.open("GET", url, false);
-	xhr.send();
+const htmlEscapes: Record<string, string> = {
+	"&": "&amp;",
+	"<": "&lt;",
+	">": "&gt;",
+	'"': "&quot;",
+	"'": "&#39;",
+};
 
-	if (xhr.status === 200) {
-		return xhr.responseText;
-	} else if (xhr.status === 404) {
-		return "";
-	} else {
-		return "";
-	}
+export function escapeHTML(value: unknown): string {
+	return String(value ?? "").replace(/[&<>"']/g, char => htmlEscapes[char]);
 }
 
-export function getJSON<T = any>(url: string): T {
-	return JSON.parse(get(url));
+export async function getJSON<T = any>(url: string): Promise<T | null> {
+	const response = await fetch(url);
+	if (!response.ok) return null;
+
+	const text = await response.text();
+	if (!text) return null;
+
+	return JSON.parse(text) as T;
 }
 
 export function debounce<T = Function>(func: Function, wait: number = 100): T {

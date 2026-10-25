@@ -111,6 +111,50 @@ export function watchNumber(
 	});
 }
 
+export function watchRange(
+	el: HTMLInputElement,
+	store: ReactiveCell<number>,
+	setFromElement = false,
+) {
+	if (setFromElement) store.set(el.valueAsNumber);
+	else el.valueAsNumber = store.get();
+	el.addEventListener("input", () => {
+		store.set(el.valueAsNumber);
+	});
+	store.subscribe(value => {
+		if (el.valueAsNumber !== value) el.valueAsNumber = value;
+	});
+}
+
+export function watchRadio(
+	els: HTMLInputElement[] | NodeListOf<HTMLInputElement>,
+	store: ReactiveCell<string>,
+	setFromElement = false,
+) {
+	const list = Array.from(els);
+
+	if (setFromElement) {
+		const checked = list.find(el => el.checked);
+		if (checked) store.set(checked.value);
+	} else {
+		const current = store.get();
+		for (const el of list) el.checked = el.value === current;
+	}
+
+	for (const el of list) {
+		el.addEventListener("change", () => {
+			if (el.checked) store.set(el.value);
+		});
+	}
+
+	store.subscribe(value => {
+		for (const el of list) {
+			const checked = el.value === value;
+			if (el.checked !== checked) el.checked = checked;
+		}
+	});
+}
+
 export function htmlToElement<T = HTMLElement>(html: string): T {
 	const template = document.createElement("template");
 	template.innerHTML = html.trim();

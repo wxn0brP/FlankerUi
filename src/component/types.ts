@@ -26,6 +26,8 @@ export interface ViewOptions<VQL = any> {
 	onData?: (data: any) => void;
 	onDataTransform?: (data: any) => any;
 	onDataSort?: (data: any) => number;
+	onLoading?: (state: boolean) => void;
+	onError?: (error: unknown) => void;
 }
 
 export interface MountViewExtra {

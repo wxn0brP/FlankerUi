@@ -131,10 +131,10 @@ Use `data-base-key` to simplify paths:
 
 ## Expression Syntax
 
-Expressions are JavaScript code that receive the store value as `v` (JS Statement):
+Expressions are JavaScript code that receive the store value as `v`:
 
 - `!` - Inverts a boolean value
 - `v === 'value'` - Compare with a string
 - `v > 10 ? 'high' : 'low'` - Conditional values
 
-See `examples/reactive-html-profile.html` for a complete browser example.
+Bindings are split on `,` and `:`, so expressions containing those characters should be avoided or moved into a helper function. Expressions are compiled with `new Function`, which requires `unsafe-eval` in a strict Content Security Policy. Pages without `unsafe-eval` should use bindings without an expression.

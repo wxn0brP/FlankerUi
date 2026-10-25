@@ -145,6 +145,7 @@ export class ReactiveCell<T> implements ReactiveCell<T> {
 	}
 
 	set(newVal: T, propagation: number = 0): this {
+		if (Object.is(this.value, newVal)) return this;
 		this.value = newVal;
 		this.notify(propagation);
 		return this;

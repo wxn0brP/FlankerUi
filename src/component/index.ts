@@ -22,43 +22,57 @@ export function mountView<Extra extends Record<string, any> = {}>(
 			: opts.selector;
 	if (!el) throw new Error(`mountView: selector '${opts.selector}' not found`);
 
+	let requestId = 0;
+
 	async function load(args: RenderArgs = {}) {
-		let data: RenderArgs;
-		const assignArgs = Object.assign({}, opts.queryArgs, args);
+		const id = ++requestId;
+		opts.onLoading?.(true);
 
-		if (opts.queryFunction) data = await opts.queryFunction(assignArgs, args);
-		else if (typeof opts.query === "string")
-			data = await fetchVQL({
-				query: opts.query,
-				var: args,
-			});
-		else if (typeof opts.query === "function")
-			data = await fetchVQL(await opts.query(assignArgs, args));
-		else if (typeof opts.query === "object" && !Array.isArray(opts.query))
-			data = await fetchVQL(opts.query);
-		else data = args;
+		try {
+			let data: RenderArgs;
+			const assignArgs = Object.assign({}, opts.queryArgs, args);
 
-		if (opts.onData) opts.onData(data);
-		if (opts.transform) data = opts.transform(data);
-		if (opts.onDataTransform) opts.onDataTransform(data);
-
-		if (opts.sort) {
-			if (typeof opts.sort === "function") {
-				data = data.sort(opts.sort);
-			} else if (typeof opts.sort === "string") {
-				const key = opts.sort;
-				data = data.sort((a: any, b: any) => {
-					const av = a?.[key],
-						bv = b?.[key];
-					return typeof av === "string" || typeof bv === "string"
-						? String(av).localeCompare(String(bv))
-						: (av ?? 0) - (bv ?? 0);
+			if (opts.queryFunction) data = await opts.queryFunction(assignArgs, args);
+			else if (typeof opts.query === "string")
+				data = await fetchVQL({
+					query: opts.query,
+					var: args,
 				});
-			}
-		}
+			else if (typeof opts.query === "function")
+				data = await fetchVQL(await opts.query(assignArgs, args));
+			else if (typeof opts.query === "object" && !Array.isArray(opts.query))
+				data = await fetchVQL(opts.query);
+			else data = args;
 
-		if (opts.onDataSort) opts.onDataSort(data);
-		render(data, opts.templateDataMode ?? "replace");
+			if (id !== requestId) return;
+
+			if (opts.onData) opts.onData(data);
+			if (opts.transform) data = opts.transform(data);
+			if (opts.onDataTransform) opts.onDataTransform(data);
+
+			if (opts.sort) {
+				if (typeof opts.sort === "function") {
+					data = data.sort(opts.sort);
+				} else if (typeof opts.sort === "string") {
+					const key = opts.sort;
+					data = data.sort((a: any, b: any) => {
+						const av = a?.[key],
+							bv = b?.[key];
+						return typeof av === "string" || typeof bv === "string"
+							? String(av).localeCompare(String(bv))
+							: (av ?? 0) - (bv ?? 0);
+					});
+				}
+			}
+
+			if (opts.onDataSort) opts.onDataSort(data);
+			render(data, opts.templateDataMode ?? "replace");
+		} catch (error) {
+			if (opts.onError) opts.onError(error);
+			else throw error;
+		} finally {
+			if (id === requestId) opts.onLoading?.(false);
+		}
 	}
 
 	// Events (delegated, attached once)
@@ -137,7 +151,7 @@ export function mountView<Extra extends Record<string, any> = {}>(
 
 	const base: MountViewComponent = {
 		element: el,
-		mount: () => {},
+		mount: () => load(),
 		load,
 		render,
 	};
