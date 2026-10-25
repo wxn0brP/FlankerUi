@@ -1,0 +1,198 @@
+<!DOCTYPE html><html class="default" lang="en" data-base="../"><head><meta charset="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>ui-view | @wxn0brp/flanker-ui</title><meta name="description" content="Documentation for @wxn0brp/flanker-ui"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="../assets/style.css"/><link rel="stylesheet" href="../assets/highlight.css"/><script defer src="../assets/main.js"></script><script async src="../assets/icons.js" id="tsd-icons-script"></script><script async src="../assets/search.js" id="tsd-search-script"></script><script async src="../assets/navigation.js" id="tsd-nav-script"></script><script async src="../assets/hierarchy.js" id="tsd-hierarchy-script"></script></head><body><script>document.documentElement.dataset.theme = localStorage.getItem("tsd-theme") || "os";document.body.style.display="none";setTimeout(() => window.app?app.showPage():document.body.style.removeProperty("display"),500)</script><header class="tsd-page-toolbar">
+<div class="tsd-toolbar-contents container"><a href="../index.html" class="title">@wxn0brp/flanker-ui</a>
+<div id="tsd-toolbar-links"></div><button id="tsd-search-trigger" class="tsd-widget" aria-label="Search"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-search"></use></svg></button><dialog id="tsd-search" aria-label="Search"><input role="combobox" id="tsd-search-input" aria-controls="tsd-search-results" aria-autocomplete="list" aria-expanded="true" autocapitalize="off" autocomplete="off" placeholder="Search the docs" maxLength="100"/>
+<ul role="listbox" id="tsd-search-results"></ul>
+<div id="tsd-search-status" aria-live="polite" aria-atomic="true">
+<div>Preparing search index...</div></div></dialog><a href="#" class="tsd-widget menu" id="tsd-toolbar-menu-trigger" data-toggle="menu" aria-label="Menu"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-menu"></use></svg></a></div></header>
+<div class="container container-main">
+<div class="col-content">
+<div class="tsd-page-title">
+<ul class="tsd-breadcrumb" aria-label="Breadcrumb">
+<li><a href="" aria-current="page">ui-view</a></li></ul></div>
+<div class="tsd-panel tsd-typography"><h1 id="uiview-and-decorators" class="tsd-anchor-link">UiView and Decorators<a href="#uiview-and-decorators" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h1>
+<p><code>UiView</code> is a small class based component with reactive properties and decorator based DOM bindings. It uses standard TypeScript decorators, so <code>experimentalDecorators</code> is not needed.</p>
+<pre><code class="typescript"><span class="hl-0">import</span><span class="hl-1"> { </span><span class="hl-6">UiView</span><span class="hl-1"> } </span><span class="hl-0">from</span><span class="hl-1"> </span><span class="hl-2">&quot;@wxn0brp/flanker-ui&quot;</span><span class="hl-1">;</span><br/><br/><span class="hl-4">class</span><span class="hl-1"> </span><span class="hl-13">SearchView</span><span class="hl-1"> </span><span class="hl-4">extends</span><span class="hl-1"> </span><span class="hl-13">UiView</span><span class="hl-1"> {</span><br/><span class="hl-1">  </span><span class="hl-6">root</span><span class="hl-1"> = </span><span class="hl-2">&quot;#search&quot;</span><span class="hl-1">;</span><br/><br/><span class="hl-1">  </span><span class="hl-7">mounted</span><span class="hl-1">() {</span><br/><span class="hl-1">    </span><span class="hl-6">console</span><span class="hl-1">.</span><span class="hl-7">log</span><span class="hl-1">(</span><span class="hl-2">&quot;ready&quot;</span><span class="hl-1">, </span><span class="hl-4">this</span><span class="hl-1">.</span><span class="hl-6">element</span><span class="hl-1">);</span><br/><span class="hl-1">  }</span><br/><span class="hl-1">}</span><br/><br/><span class="hl-4">const</span><span class="hl-1"> </span><span class="hl-5">view</span><span class="hl-1"> = </span><span class="hl-4">new</span><span class="hl-1"> </span><span class="hl-7">SearchView</span><span class="hl-1">();</span><br/><span class="hl-6">view</span><span class="hl-1">.</span><span class="hl-7">mount</span><span class="hl-1">();</span>
+</code><button type="button">Copy</button></pre>
+
+<h2 id="lifecycle" class="tsd-anchor-link">Lifecycle<a href="#lifecycle" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<ul>
+<li><code>root</code> - a selector or an <code>HTMLElement</code>. It is resolved during <code>mount()</code>. You can also assign <code>element</code> directly.</li>
+<li><code>element</code> - the root element of the view.</li>
+<li><code>mount()</code> - resolves the root, wires decorators, then calls <code>mounted()</code>. Calling it twice does nothing.</li>
+<li><code>mounted()</code> - hook called after the element is ready and decorators are attached.</li>
+<li><code>requestUpdate()</code> - schedules <code>onUpdate()</code> in a microtask. Multiple calls in the same tick produce one update.</li>
+<li><code>onUpdate()</code> - hook for responding to reactive property changes.</li>
+</ul>
+<h2 id="how-decorators-work" class="tsd-anchor-link">How Decorators Work<a href="#how-decorators-work" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p>Decorators do not touch the DOM. They write declarations into class metadata. <code>mount()</code> reads that metadata and performs the actual work.</p>
+<p>This means:</p>
+<ul>
+<li>The class must extend <code>UiView</code>.</li>
+<li><code>mount()</code> must be called.</li>
+<li><code>@prop</code>, <code>@bind</code>, <code>@query</code>, and <code>@queryAll</code> require an <code>accessor</code> field.</li>
+<li>Warnings are emitted for incomplete declarations, so a silently skipped binding is easier to spot.</li>
+</ul>
+<h2 id="_" class="tsd-anchor-link"><code>@prop()</code><a href="#_" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p>Turns an accessor into a reactive property backed by a <code>ReactiveCell</code>.</p>
+<pre><code class="typescript"><span class="hl-4">class</span><span class="hl-1"> </span><span class="hl-13">CounterView</span><span class="hl-1"> </span><span class="hl-4">extends</span><span class="hl-1"> </span><span class="hl-13">UiView</span><span class="hl-1"> {</span><br/><span class="hl-1">  @</span><span class="hl-7">prop</span><span class="hl-1">() </span><span class="hl-4">accessor</span><span class="hl-1"> </span><span class="hl-6">count</span><span class="hl-1"> = </span><span class="hl-14">0</span><span class="hl-1">;</span><br/><br/><span class="hl-1">  </span><span class="hl-7">onUpdate</span><span class="hl-1">() {</span><br/><span class="hl-1">    </span><span class="hl-4">this</span><span class="hl-1">.</span><span class="hl-6">element</span><span class="hl-1">.</span><span class="hl-6">textContent</span><span class="hl-1"> = </span><span class="hl-7">String</span><span class="hl-1">(</span><span class="hl-4">this</span><span class="hl-1">.</span><span class="hl-6">count</span><span class="hl-1">);</span><br/><span class="hl-1">  }</span><br/><span class="hl-1">}</span>
+</code><button type="button">Copy</button></pre>
+
+<p>Reading the property calls <code>cell.get()</code>. Writing it calls <code>cell.set()</code> and <code>requestUpdate()</code>.</p>
+<p><code>PropOptions</code> (<code>attribute</code> and <code>type</code>) are reserved and currently ignored.</p>
+<h2 id="_-1" class="tsd-anchor-link"><code>@bind(selector, type)</code><a href="#_-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p>Connects a reactive property to an element inside the view.</p>
+<pre><code class="typescript"><span class="hl-4">class</span><span class="hl-1"> </span><span class="hl-13">SearchView</span><span class="hl-1"> </span><span class="hl-4">extends</span><span class="hl-1"> </span><span class="hl-13">UiView</span><span class="hl-1"> {</span><br/><span class="hl-1">  </span><span class="hl-6">root</span><span class="hl-1"> = </span><span class="hl-2">&quot;#search&quot;</span><span class="hl-1">;</span><br/><br/><span class="hl-1">  @</span><span class="hl-7">prop</span><span class="hl-1">()</span><br/><span class="hl-1">  @</span><span class="hl-7">bind</span><span class="hl-1">(</span><span class="hl-2">&quot;#search-input&quot;</span><span class="hl-1">, </span><span class="hl-2">&quot;value&quot;</span><span class="hl-1">)</span><br/><span class="hl-1">  </span><span class="hl-4">accessor</span><span class="hl-1"> </span><span class="hl-6">query</span><span class="hl-1"> = </span><span class="hl-2">&quot;&quot;</span><span class="hl-1">;</span><br/><br/><span class="hl-1">  @</span><span class="hl-7">prop</span><span class="hl-1">()</span><br/><span class="hl-1">  @</span><span class="hl-7">bind</span><span class="hl-1">(</span><span class="hl-2">&quot;#result-count&quot;</span><span class="hl-1">, </span><span class="hl-2">&quot;text&quot;</span><span class="hl-1">)</span><br/><span class="hl-1">  </span><span class="hl-4">accessor</span><span class="hl-1"> </span><span class="hl-6">count</span><span class="hl-1"> = </span><span class="hl-14">0</span><span class="hl-1">;</span><br/><span class="hl-1">}</span>
+</code><button type="button">Copy</button></pre>
+
+<p><code>@bind</code> requires a cell for the same property. Add <code>@prop()</code> to the same accessor. Without it, the binding is skipped and a warning is printed.</p>
+<p>Binding types:</p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Helper</th>
+<th>Direction</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>value</code></td>
+<td><code>watchInput</code></td>
+<td>two-way</td>
+</tr>
+<tr>
+<td><code>number</code></td>
+<td><code>watchNumber</code></td>
+<td>two-way</td>
+</tr>
+<tr>
+<td><code>range</code></td>
+<td><code>watchRange</code></td>
+<td>two-way</td>
+</tr>
+<tr>
+<td><code>radio</code></td>
+<td><code>watchRadio</code></td>
+<td>two-way</td>
+</tr>
+<tr>
+<td><code>checked</code></td>
+<td><code>watchCheckbox</code></td>
+<td>two-way</td>
+</tr>
+<tr>
+<td><code>text</code></td>
+<td><code>textContent</code></td>
+<td>cell to DOM</td>
+</tr>
+<tr>
+<td><code>html</code></td>
+<td><code>innerHTML</code></td>
+<td>cell to DOM</td>
+</tr>
+</tbody>
+</table>
+<p>Two-way types read the element value during <code>mount()</code>, so the DOM is the initial source of truth. <code>text</code> and <code>html</code> use the cell value as the initial state.</p>
+<p>For <code>radio</code>, the selector is used with <code>querySelectorAll</code>, so it should match the whole group.</p>
+<h2 id="_-2" class="tsd-anchor-link"><code>@hide(cell, negate?)</code><a href="#_-2" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p>Shows the element when the cell is truthy and hides it otherwise.</p>
+<pre><code class="typescript"><span class="hl-4">class</span><span class="hl-1"> </span><span class="hl-13">SearchView</span><span class="hl-1"> </span><span class="hl-4">extends</span><span class="hl-1"> </span><span class="hl-13">UiView</span><span class="hl-1"> {</span><br/><span class="hl-1">  </span><span class="hl-6">root</span><span class="hl-1"> = </span><span class="hl-2">&quot;#search&quot;</span><span class="hl-1">;</span><br/><br/><span class="hl-1">  @</span><span class="hl-7">hide</span><span class="hl-1">(</span><span class="hl-6">store</span><span class="hl-1">.</span><span class="hl-6">loading</span><span class="hl-1">)</span><br/><span class="hl-1">  @</span><span class="hl-7">query</span><span class="hl-1">(</span><span class="hl-2">&quot;#spinner&quot;</span><span class="hl-1">)</span><br/><span class="hl-1">  </span><span class="hl-4">accessor</span><span class="hl-1"> </span><span class="hl-6">spinner</span><span class="hl-1">: </span><span class="hl-13">HTMLElement</span><span class="hl-1">;</span><br/><span class="hl-1">}</span>
+</code><button type="button">Copy</button></pre>
+
+<p>On a class, the decorator controls the view root:</p>
+<pre><code class="typescript"><span class="hl-1">@</span><span class="hl-7">hide</span><span class="hl-1">(</span><span class="hl-6">store</span><span class="hl-1">.</span><span class="hl-6">loading</span><span class="hl-1">)</span><br/><span class="hl-4">class</span><span class="hl-1"> </span><span class="hl-13">SearchView</span><span class="hl-1"> </span><span class="hl-4">extends</span><span class="hl-1"> </span><span class="hl-13">UiView</span><span class="hl-1"> {</span><br/><span class="hl-1">  </span><span class="hl-6">root</span><span class="hl-1"> = </span><span class="hl-2">&quot;#search&quot;</span><span class="hl-1">;</span><br/><span class="hl-1">}</span>
+</code><button type="button">Copy</button></pre>
+
+<p><code>negate</code> reverses the meaning.</p>
+<h2 id="_-3" class="tsd-anchor-link"><code>@classToggle(className, cell, negate?)</code><a href="#_-3" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p>Adds or removes a class based on a cell.</p>
+<pre><code class="typescript"><span class="hl-4">class</span><span class="hl-1"> </span><span class="hl-13">PanelView</span><span class="hl-1"> </span><span class="hl-4">extends</span><span class="hl-1"> </span><span class="hl-13">UiView</span><span class="hl-1"> {</span><br/><span class="hl-1">  </span><span class="hl-6">root</span><span class="hl-1"> = </span><span class="hl-2">&quot;#panel&quot;</span><span class="hl-1">;</span><br/><br/><span class="hl-1">  @</span><span class="hl-7">classToggle</span><span class="hl-1">(</span><span class="hl-2">&quot;is-active&quot;</span><span class="hl-1">, </span><span class="hl-6">store</span><span class="hl-1">.</span><span class="hl-6">active</span><span class="hl-1">)</span><br/><span class="hl-1">  @</span><span class="hl-7">query</span><span class="hl-1">(</span><span class="hl-2">&quot;#panel-body&quot;</span><span class="hl-1">)</span><br/><span class="hl-1">  </span><span class="hl-4">accessor</span><span class="hl-1"> </span><span class="hl-6">body</span><span class="hl-1">: </span><span class="hl-13">HTMLElement</span><span class="hl-1">;</span><br/><span class="hl-1">}</span>
+</code><button type="button">Copy</button></pre>
+
+<p>It also works on the class to target the view root.</p>
+<h2 id="_-4" class="tsd-anchor-link"><code>@attr(attrName, cell, negate?)</code><a href="#_-4" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p>Sets or removes an attribute based on a cell.</p>
+<pre><code class="typescript"><span class="hl-4">class</span><span class="hl-1"> </span><span class="hl-13">PanelView</span><span class="hl-1"> </span><span class="hl-4">extends</span><span class="hl-1"> </span><span class="hl-13">UiView</span><span class="hl-1"> {</span><br/><span class="hl-1">  </span><span class="hl-6">root</span><span class="hl-1"> = </span><span class="hl-2">&quot;#panel&quot;</span><span class="hl-1">;</span><br/><br/><span class="hl-1">  @</span><span class="hl-7">attr</span><span class="hl-1">(</span><span class="hl-2">&quot;aria-busy&quot;</span><span class="hl-1">, </span><span class="hl-6">store</span><span class="hl-1">.</span><span class="hl-6">loading</span><span class="hl-1">)</span><br/><span class="hl-1">  @</span><span class="hl-7">query</span><span class="hl-1">(</span><span class="hl-2">&quot;#panel-body&quot;</span><span class="hl-1">)</span><br/><span class="hl-1">  </span><span class="hl-4">accessor</span><span class="hl-1"> </span><span class="hl-6">body</span><span class="hl-1">: </span><span class="hl-13">HTMLElement</span><span class="hl-1">;</span><br/><span class="hl-1">}</span>
+</code><button type="button">Copy</button></pre>
+
+<p>When the value is <code>null</code>, <code>undefined</code>, or <code>false</code>, the attribute is removed. Otherwise it is set as a string.</p>
+<h2 id="and" class="tsd-anchor-link"><code>@query(selector)</code> and <code>@queryAll(selector)</code><a href="#and" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p>Define getters that query inside <code>this.element</code>.</p>
+<pre><code class="typescript"><span class="hl-4">class</span><span class="hl-1"> </span><span class="hl-13">ListView</span><span class="hl-1"> </span><span class="hl-4">extends</span><span class="hl-1"> </span><span class="hl-13">UiView</span><span class="hl-1"> {</span><br/><span class="hl-1">  </span><span class="hl-6">root</span><span class="hl-1"> = </span><span class="hl-2">&quot;#list&quot;</span><span class="hl-1">;</span><br/><br/><span class="hl-1">  @</span><span class="hl-7">query</span><span class="hl-1">(</span><span class="hl-2">&quot;#list-header&quot;</span><span class="hl-1">) </span><span class="hl-4">accessor</span><span class="hl-1"> </span><span class="hl-6">header</span><span class="hl-1">: </span><span class="hl-13">HTMLElement</span><span class="hl-1">;</span><br/><span class="hl-1">  @</span><span class="hl-7">queryAll</span><span class="hl-1">(</span><span class="hl-2">&quot;.list-row&quot;</span><span class="hl-1">) </span><span class="hl-4">accessor</span><span class="hl-1"> </span><span class="hl-6">rows</span><span class="hl-1">: </span><span class="hl-13">NodeListOf</span><span class="hl-1">&lt;</span><span class="hl-13">HTMLElement</span><span class="hl-1">&gt;;</span><br/><span class="hl-1">}</span>
+</code><button type="button">Copy</button></pre>
+
+<p>The result is not cached. Each access runs <code>querySelector</code> or <code>querySelectorAll</code> again, so it stays correct after <code>innerHTML</code> changes. Before <code>mount()</code> and when nothing matches, the value is <code>null</code>.</p>
+<h2 id="_-5" class="tsd-anchor-link"><code>@on(event, selector?)</code><a href="#_-5" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p>Attaches a method as an event listener on <code>this.element</code>.</p>
+<pre><code class="typescript"><span class="hl-4">class</span><span class="hl-1"> </span><span class="hl-13">ListView</span><span class="hl-1"> </span><span class="hl-4">extends</span><span class="hl-1"> </span><span class="hl-13">UiView</span><span class="hl-1"> {</span><br/><span class="hl-1">  </span><span class="hl-6">root</span><span class="hl-1"> = </span><span class="hl-2">&quot;#list&quot;</span><span class="hl-1">;</span><br/><br/><span class="hl-1">  @</span><span class="hl-7">on</span><span class="hl-1">(</span><span class="hl-2">&quot;click&quot;</span><span class="hl-1">, </span><span class="hl-2">&quot;.delete&quot;</span><span class="hl-1">)</span><br/><span class="hl-1">  </span><span class="hl-7">onDelete</span><span class="hl-1">(</span><span class="hl-6">match</span><span class="hl-1">: </span><span class="hl-13">HTMLElement</span><span class="hl-1">, </span><span class="hl-6">event</span><span class="hl-1">: </span><span class="hl-13">MouseEvent</span><span class="hl-1">) {</span><br/><span class="hl-1">    </span><span class="hl-6">console</span><span class="hl-1">.</span><span class="hl-7">log</span><span class="hl-1">(</span><span class="hl-2">&quot;delete&quot;</span><span class="hl-1">, </span><span class="hl-6">match</span><span class="hl-1">.</span><span class="hl-6">dataset</span><span class="hl-1">.</span><span class="hl-6">id</span><span class="hl-1">);</span><br/><span class="hl-1">  }</span><br/><br/><span class="hl-1">  @</span><span class="hl-7">on</span><span class="hl-1">(</span><span class="hl-2">&quot;keydown&quot;</span><span class="hl-1">)</span><br/><span class="hl-1">  </span><span class="hl-7">onKey</span><span class="hl-1">(</span><span class="hl-6">event</span><span class="hl-1">: </span><span class="hl-13">KeyboardEvent</span><span class="hl-1">) {</span><br/><span class="hl-1">    </span><span class="hl-6">console</span><span class="hl-1">.</span><span class="hl-7">log</span><span class="hl-1">(</span><span class="hl-6">event</span><span class="hl-1">.</span><span class="hl-6">key</span><span class="hl-1">);</span><br/><span class="hl-1">  }</span><br/><span class="hl-1">}</span>
+</code><button type="button">Copy</button></pre>
+
+<p>With <code>selector</code>, the event is delegated through <code>closest()</code> and the handler receives <code>(match, event)</code>. Without a selector, the handler receives <code>(event)</code>. <code>this</code> is bound to the view instance.</p>
+<h2 id="warnings" class="tsd-anchor-link">Warnings<a href="#warnings" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p><code>mount()</code> prints <code>console.warn</code> messages when a decorator is incomplete. Warnings are deduplicated per class, decorator, and property, so multiple instances do not spam the console.</p>
+<p><code>@bind</code> without <code>@prop</code>:</p>
+<pre><code><span class="hl-1">[</span><span class="hl-6">FlankerUi</span><span class="hl-1">] </span><span class="hl-15">SearchView</span><span class="hl-1">: @</span><span class="hl-7">bind</span><span class="hl-1">(</span><span class="hl-2">&quot;#search-input&quot;</span><span class="hl-1">, </span><span class="hl-2">&quot;value&quot;</span><span class="hl-1">) </span><span class="hl-6">on</span><span class="hl-1"> </span><span class="hl-2">&quot;query&quot;</span><span class="hl-1"> </span><span class="hl-6">requires</span><span class="hl-1"> @</span><span class="hl-7">prop</span><span class="hl-1">() </span><span class="hl-6">on</span><span class="hl-1"> </span><span class="hl-6">the</span><span class="hl-1"> </span><span class="hl-6">same</span><span class="hl-1"> </span><span class="hl-6">property</span><span class="hl-1">. </span><span class="hl-6">Binding</span><span class="hl-1"> </span><span class="hl-6">skipped</span><span class="hl-1">.</span>
+</code><button>Copy</button></pre>
+
+<p><code>@bind</code> with a selector that matches nothing:</p>
+<pre><code><span class="hl-1">[</span><span class="hl-6">FlankerUi</span><span class="hl-1">] </span><span class="hl-15">SearchView</span><span class="hl-1">: @</span><span class="hl-7">bind</span><span class="hl-1">(</span><span class="hl-2">&quot;#search-input&quot;</span><span class="hl-1">, </span><span class="hl-2">&quot;value&quot;</span><span class="hl-1">) </span><span class="hl-6">on</span><span class="hl-1"> </span><span class="hl-2">&quot;query&quot;</span><span class="hl-1"> </span><span class="hl-6">found</span><span class="hl-1"> </span><span class="hl-6">no</span><span class="hl-1"> </span><span class="hl-6">element</span><span class="hl-1"> </span><span class="hl-6">for</span><span class="hl-1"> </span><span class="hl-6">selector</span><span class="hl-1"> </span><span class="hl-2">&quot;#search-input&quot;</span><span class="hl-1">. </span><span class="hl-6">Binding</span><span class="hl-1"> </span><span class="hl-6">skipped</span><span class="hl-1">.</span>
+</code><button>Copy</button></pre>
+
+<p><code>@hide</code>, <code>@classToggle</code>, or <code>@attr</code> on a property without an element:</p>
+<pre><code><span class="hl-1">[</span><span class="hl-6">FlankerUi</span><span class="hl-1">] </span><span class="hl-15">SearchView</span><span class="hl-1">: @</span><span class="hl-6">hide</span><span class="hl-1"> </span><span class="hl-6">on</span><span class="hl-1"> </span><span class="hl-2">&quot;spinner&quot;</span><span class="hl-1"> </span><span class="hl-6">has</span><span class="hl-1"> </span><span class="hl-6">no</span><span class="hl-1"> </span><span class="hl-6">element</span><span class="hl-1">. </span><span class="hl-6">Add</span><span class="hl-1"> @</span><span class="hl-7">query</span><span class="hl-1">()/@</span><span class="hl-7">queryAll</span><span class="hl-1">() </span><span class="hl-6">or</span><span class="hl-1"> </span><span class="hl-6">assign</span><span class="hl-1"> </span><span class="hl-6">the</span><span class="hl-1"> </span><span class="hl-6">element</span><span class="hl-1"> </span><span class="hl-6">before</span><span class="hl-1"> </span><span class="hl-6">mount</span><span class="hl-1">.</span>
+</code><button>Copy</button></pre>
+
+<p>When <code>@query</code> is present but the selector matched nothing:</p>
+<pre><code><span class="hl-1">[</span><span class="hl-6">FlankerUi</span><span class="hl-1">] </span><span class="hl-15">SearchView</span><span class="hl-1">: @</span><span class="hl-6">hide</span><span class="hl-1"> </span><span class="hl-6">on</span><span class="hl-1"> </span><span class="hl-2">&quot;spinner&quot;</span><span class="hl-1"> </span><span class="hl-6">has</span><span class="hl-1"> </span><span class="hl-6">no</span><span class="hl-1"> </span><span class="hl-6">element</span><span class="hl-1">. </span><span class="hl-6">The</span><span class="hl-1"> @</span><span class="hl-6">query</span><span class="hl-1">/@</span><span class="hl-6">queryAll</span><span class="hl-1"> </span><span class="hl-6">selector</span><span class="hl-1"> </span><span class="hl-6">matched</span><span class="hl-1"> </span><span class="hl-6">nothing</span><span class="hl-1">.</span>
+</code><button>Copy</button></pre>
+
+<p>A class level decorator without a root element:</p>
+<pre><code><span class="hl-1">[</span><span class="hl-6">FlankerUi</span><span class="hl-1">] </span><span class="hl-15">SearchView</span><span class="hl-1">: @</span><span class="hl-7">classToggle</span><span class="hl-1">(</span><span class="hl-2">&quot;is-active&quot;</span><span class="hl-1">) </span><span class="hl-6">targets</span><span class="hl-1"> </span><span class="hl-6">the</span><span class="hl-1"> </span><span class="hl-6">view</span><span class="hl-1"> </span><span class="hl-6">root</span><span class="hl-1">, </span><span class="hl-6">but</span><span class="hl-1"> </span><span class="hl-4">this</span><span class="hl-1">.</span><span class="hl-6">element</span><span class="hl-1"> </span><span class="hl-6">is</span><span class="hl-1"> </span><span class="hl-6">undefined</span><span class="hl-1">. </span><span class="hl-6">Set</span><span class="hl-1"> </span><span class="hl-6">root</span><span class="hl-1"> </span><span class="hl-6">or</span><span class="hl-1"> </span><span class="hl-6">element</span><span class="hl-1"> </span><span class="hl-6">before</span><span class="hl-1"> </span><span class="hl-6">mount</span><span class="hl-1">.</span>
+</code><button>Copy</button></pre>
+
+<p>Warnings do not throw and do not change behavior. The affected binding is skipped.</p>
+<h2 id="initial-state" class="tsd-anchor-link">Initial State<a href="#initial-state" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p><code>@hide</code>, <code>@classToggle</code>, and <code>@attr</code> subscribe to their cell. The initial state is applied on the next notification, not during <code>mount()</code>.</p>
+<p>If the element must reflect the current cell value immediately, notify it in <code>mounted()</code>:</p>
+<pre><code class="typescript"><span class="hl-7">mounted</span><span class="hl-1">() {</span><br/><span class="hl-1">  </span><span class="hl-6">store</span><span class="hl-1">.</span><span class="hl-6">loading</span><span class="hl-1">.</span><span class="hl-7">notify</span><span class="hl-1">();</span><br/><span class="hl-1">}</span>
+</code><button type="button">Copy</button></pre>
+
+<h2 id="full-example" class="tsd-anchor-link">Full Example<a href="#full-example" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<pre><code class="typescript"><span class="hl-0">import</span><span class="hl-1"> { </span><span class="hl-6">UiView</span><span class="hl-1">, </span><span class="hl-6">createStore</span><span class="hl-1"> } </span><span class="hl-0">from</span><span class="hl-1"> </span><span class="hl-2">&quot;@wxn0brp/flanker-ui&quot;</span><span class="hl-1">;</span><br/><br/><span class="hl-4">const</span><span class="hl-1"> </span><span class="hl-5">store</span><span class="hl-1"> = </span><span class="hl-7">createStore</span><span class="hl-1">({</span><br/><span class="hl-1">  </span><span class="hl-6">loading:</span><span class="hl-1"> </span><span class="hl-4">false</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-6">query:</span><span class="hl-1"> </span><span class="hl-2">&quot;&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-6">volume:</span><span class="hl-1"> </span><span class="hl-14">0.5</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-6">plan:</span><span class="hl-1"> </span><span class="hl-2">&quot;free&quot;</span><br/><span class="hl-1">});</span><br/><br/><span class="hl-4">class</span><span class="hl-1"> </span><span class="hl-13">SettingsView</span><span class="hl-1"> </span><span class="hl-4">extends</span><span class="hl-1"> </span><span class="hl-13">UiView</span><span class="hl-1"> {</span><br/><span class="hl-1">  </span><span class="hl-6">root</span><span class="hl-1"> = </span><span class="hl-2">&quot;#settings&quot;</span><span class="hl-1">;</span><br/><br/><span class="hl-1">  @</span><span class="hl-7">prop</span><span class="hl-1">()</span><br/><span class="hl-1">  @</span><span class="hl-7">bind</span><span class="hl-1">(</span><span class="hl-2">&quot;#query&quot;</span><span class="hl-1">, </span><span class="hl-2">&quot;value&quot;</span><span class="hl-1">)</span><br/><span class="hl-1">  </span><span class="hl-4">accessor</span><span class="hl-1"> </span><span class="hl-6">query</span><span class="hl-1"> = </span><span class="hl-2">&quot;&quot;</span><span class="hl-1">;</span><br/><br/><span class="hl-1">  @</span><span class="hl-7">prop</span><span class="hl-1">()</span><br/><span class="hl-1">  @</span><span class="hl-7">bind</span><span class="hl-1">(</span><span class="hl-2">&quot;#volume&quot;</span><span class="hl-1">, </span><span class="hl-2">&quot;range&quot;</span><span class="hl-1">)</span><br/><span class="hl-1">  </span><span class="hl-4">accessor</span><span class="hl-1"> </span><span class="hl-6">volume</span><span class="hl-1"> = </span><span class="hl-14">0.5</span><span class="hl-1">;</span><br/><br/><span class="hl-1">  @</span><span class="hl-7">prop</span><span class="hl-1">()</span><br/><span class="hl-1">  @</span><span class="hl-7">bind</span><span class="hl-1">(</span><span class="hl-2">&quot;input[name=plan]&quot;</span><span class="hl-1">, </span><span class="hl-2">&quot;radio&quot;</span><span class="hl-1">)</span><br/><span class="hl-1">  </span><span class="hl-4">accessor</span><span class="hl-1"> </span><span class="hl-6">plan</span><span class="hl-1"> = </span><span class="hl-2">&quot;free&quot;</span><span class="hl-1">;</span><br/><br/><span class="hl-1">  @</span><span class="hl-7">hide</span><span class="hl-1">(</span><span class="hl-6">store</span><span class="hl-1">.</span><span class="hl-6">loading</span><span class="hl-1">)</span><br/><span class="hl-1">  @</span><span class="hl-7">query</span><span class="hl-1">(</span><span class="hl-2">&quot;#spinner&quot;</span><span class="hl-1">)</span><br/><span class="hl-1">  </span><span class="hl-4">accessor</span><span class="hl-1"> </span><span class="hl-6">spinner</span><span class="hl-1">: </span><span class="hl-13">HTMLElement</span><span class="hl-1">;</span><br/><br/><span class="hl-1">  @</span><span class="hl-7">on</span><span class="hl-1">(</span><span class="hl-2">&quot;click&quot;</span><span class="hl-1">, </span><span class="hl-2">&quot;#save&quot;</span><span class="hl-1">)</span><br/><span class="hl-1">  </span><span class="hl-7">onSave</span><span class="hl-1">() {</span><br/><span class="hl-1">    </span><span class="hl-6">store</span><span class="hl-1">.</span><span class="hl-7">set</span><span class="hl-1">({</span><br/><span class="hl-1">      </span><span class="hl-6">query:</span><span class="hl-1"> </span><span class="hl-4">this</span><span class="hl-1">.</span><span class="hl-6">query</span><span class="hl-1">,</span><br/><span class="hl-1">      </span><span class="hl-6">volume:</span><span class="hl-1"> </span><span class="hl-4">this</span><span class="hl-1">.</span><span class="hl-6">volume</span><span class="hl-1">,</span><br/><span class="hl-1">      </span><span class="hl-6">plan:</span><span class="hl-1"> </span><span class="hl-4">this</span><span class="hl-1">.</span><span class="hl-6">plan</span><br/><span class="hl-1">    });</span><br/><span class="hl-1">  }</span><br/><br/><span class="hl-1">  </span><span class="hl-7">mounted</span><span class="hl-1">() {</span><br/><span class="hl-1">    </span><span class="hl-6">store</span><span class="hl-1">.</span><span class="hl-6">loading</span><span class="hl-1">.</span><span class="hl-7">notify</span><span class="hl-1">();</span><br/><span class="hl-1">  }</span><br/><span class="hl-1">}</span><br/><br/><span class="hl-4">new</span><span class="hl-1"> </span><span class="hl-7">SettingsView</span><span class="hl-1">().</span><span class="hl-7">mount</span><span class="hl-1">();</span>
+</code><button type="button">Copy</button></pre>
+
+</div></div>
+<div class="col-sidebar">
+<div class="page-menu">
+<div class="tsd-navigation settings">
+<details class="tsd-accordion"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg>
+<h3>Settings</h3></summary>
+<div class="tsd-accordion-details">
+<div class="tsd-filter-visibility"><span class="settings-label">Member Visibility</span>
+<ul id="tsd-filter-options">
+<li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-protected" name="protected"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Protected</span></label></li>
+<li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-inherited" name="inherited" checked/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Inherited</span></label></li>
+<li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-external" name="external"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>External</span></label></li></ul></div>
+<div class="tsd-theme-toggle"><label class="settings-label" for="tsd-theme">Theme</label><select id="tsd-theme"><option value="os">OS</option><option value="light">Light</option><option value="dark">Dark</option></select></div></div></details></div>
+<details open class="tsd-accordion tsd-page-navigation"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg>
+<h3>On This Page</h3></summary>
+<div class="tsd-accordion-details"><a href="#uiview-and-decorators"><span>Ui<wbr/>View and <wbr/>Decorators</span></a>
+<ul>
+<li><a href="#lifecycle"><span>Lifecycle</span></a></li>
+<li><a href="#how-decorators-work"><span>How <wbr/>Decorators <wbr/>Work</span></a></li>
+<li><a href="#_"><span></span></a></li>
+<li><a href="#_-1"><span></span></a></li>
+<li><a href="#_-2"><span></span></a></li>
+<li><a href="#_-3"><span></span></a></li>
+<li><a href="#_-4"><span></span></a></li>
+<li><a href="#and"><span> and </span></a></li>
+<li><a href="#_-5"><span></span></a></li>
+<li><a href="#warnings"><span>Warnings</span></a></li>
+<li><a href="#initial-state"><span>Initial <wbr/>State</span></a></li>
+<li><a href="#full-example"><span>Full <wbr/>Example</span></a></li></ul></div></details></div>
+<div class="site-menu">
+<nav class="tsd-navigation"><a href="../modules.html">@wxn0brp/flanker-ui</a>
+<ul class="tsd-small-nested-navigation" id="tsd-nav-container">
+<li>Loading...</li></ul></nav></div></div></div><footer>
+<p class="tsd-generator">Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p></footer>
+<div class="overlay"></div></body></html>
