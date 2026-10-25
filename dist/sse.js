@@ -1,0 +1,71 @@
+import { VEE } from "@wxn0brp/event-emitter";
+export class SSEClient extends VEE {
+    url;
+    opts;
+    eventSource = null;
+    _status = "disconnected";
+    _reconnectAttempts = 0;
+    reconnectTimeout = null;
+    constructor(url, opts = {}) {
+        super();
+        this.url = url;
+        this.opts = opts;
+    }
+    get status() {
+        return this._status;
+    }
+    get reconnectAttempts() {
+        return this._reconnectAttempts;
+    }
+    connect() {
+        if (this._status === "connected" || this._status === "connecting")
+            return;
+        this._status = "connecting";
+        this.eventSource = new EventSource(this.url, {
+            withCredentials: this.opts.withCredentials ?? false,
+        });
+        this.eventSource.onopen = () => {
+            this._status = "connected";
+            this._reconnectAttempts = 0;
+            this.opts.onOpen?.();
+        };
+        this.eventSource.onmessage = event => {
+            try {
+                const eventName = event.type || "";
+                const data = JSON.parse(event.data);
+                this._emit(eventName, data);
+            }
+            catch (e) {
+                console.error("SSE parse error:", e);
+            }
+        };
+        this.eventSource.onerror = event => {
+            this._status = "disconnected";
+            this.opts.onError?.(event);
+            this.eventSource?.close();
+            this.eventSource = null;
+            const max = this.opts.maxReconnectAttempts ?? 0;
+            if (max === 0 || this._reconnectAttempts < max) {
+                this._reconnectAttempts++;
+                this.reconnectTimeout = setTimeout(() => {
+                    this.reconnectTimeout = null;
+                    this.connect();
+                }, this.opts.reconnectInterval ?? 3000);
+            }
+        };
+    }
+    disconnect() {
+        if (this.reconnectTimeout) {
+            clearTimeout(this.reconnectTimeout);
+            this.reconnectTimeout = null;
+        }
+        if (this.eventSource) {
+            this.eventSource.close();
+            this.eventSource = null;
+        }
+        this._status = "disconnected";
+        this._reconnectAttempts = 0;
+        this.opts.onClose?.();
+    }
+}
+//# sourceMappingURL=sse.js.map
