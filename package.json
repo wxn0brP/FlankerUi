@@ -17,7 +17,7 @@
     },
     "devDependencies": {
         "@wxn0brp/biome": "*",
-        "@wxn0brp/event-emitter": "^0.0.7",
+        "@wxn0brp/event-emitter": "^0.0.8",
         "@wxn0brp/vql-client": "^0.2.9",
         "esbuild": "*",
         "tsc-alias": "^1",
