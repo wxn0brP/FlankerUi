@@ -18,7 +18,7 @@
     "devDependencies": {
         "@wxn0brp/biome": "*",
         "@wxn0brp/event-emitter": "^0.0.7",
-        "@wxn0brp/vql-client": "^0.2.9",
+        "@wxn0brp/vql-client": "^0.3.0",
         "esbuild": "*",
         "tsc-alias": "^1",
         "typescript": "^6"
